@@ -5,6 +5,7 @@ void run(const char *file_name) {
     Scanner scanner;
     scanner.load(file_name);
     scanner.tokenize();
+    scanner.print_tokens();
 }
 
 void repl() {

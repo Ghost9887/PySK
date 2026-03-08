@@ -1,0 +1,32 @@
+#include "common.hpp"
+
+std::unordered_map<Token, std::string> lookup_table = {
+    {EOS, "EOS"},
+    {Add, "Add"},
+    {Sub, "Sub"},
+    {Multiply, "Multiply"},
+    {Divide, "Divide"},
+    {RParen, "RParen"},
+    {LParen, "LParen"},
+    {LBracket, "LBracket"},
+    {RBracket, "RBracket"},
+    {Comma, "Comma"},
+    {Dot, "Dot"},
+    {Equals, "Equals"},
+    {Greater, "Greater"},
+    {Lesser, "Lesser"},
+    {GreaterEquals, "GreaterEquals"},
+    {GreaterLesser, "GreaterLesser"},
+    {LesserEquals, "LesserEquals"},
+    {EqualsEquals, "EqualsEquals"},
+    {Identifier, "Identifier"},
+    {Vytlac, "Vytlac"},
+    {Number, "Number"},
+    {Ked, "Ked"},
+    {Inak, "Inak"},
+    {InakKed, "InakKed"},
+    {Ak, "Ak"},
+    {Pokial, "Pokial"},
+    {Vratit, "Vratit"},
+    {Funk, "Funk"}
+};
