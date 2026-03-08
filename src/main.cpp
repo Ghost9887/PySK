@@ -1,7 +1,10 @@
 #include "common.hpp"
+#include "scanner.hpp"
 
 void run(const char *file_name) {
-    std::cout << "run" << '\n';
+    Scanner scanner;
+    scanner.load(file_name);
+    scanner.tokenize();
 }
 
 void repl() {
