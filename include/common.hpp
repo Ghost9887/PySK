@@ -5,20 +5,21 @@
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <optional>
 #include <unordered_map>
+#include <variant>
 
-typedef enum { 
-    EOS, Add, Sub, Multiply, Divide, 
-    RParen, LParen, RBracket, LBracket, 
-    Comma, Equals, Greater, Lesser, Dot,
+typedef enum {
+    EOS, PLUS, SUB, STAR, SLASH, 
+    R_PAREN, L_PAREN, R_BRACKET, L_BRACKET, 
+    COMMA, EQUALS, GREATER, LESSER, DOT,
 
-    GreaterEquals, LesserEquals, GreaterLesser, 
-    LesserGreater, EqualsEquals, 
-    
-    Identifier, Vytlac, Number, Ked, Inak, 
-    InakKed, Ak, Pokial, Vratit, Funk 
-}Token;
+    GREATER_EQUALS, LESSER_EQUALS, EQUALS_EQUALS, 
 
-extern std::unordered_map<Token, std::string> lookup_table;
+    IDENTIFIER, NUMBER, VYTLAC, KED, INAK, 
+    INAK_KED, AK, POKIAL, VRATIT,  FUNK
+}TokenType;
+
+extern std::unordered_map<TokenType, std::string> lookup_table;
 
 #endif
