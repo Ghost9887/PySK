@@ -8,8 +8,20 @@ void run(const char *file_name) {
     scanner.print_tokens();
 }
 
+void run(std::string content) {
+    Scanner scanner(content);
+    scanner.tokenize();
+    scanner.print_tokens();
+}
+
 void repl() {
-    std::cout << "repl" << '\n';
+    std::string input;
+    while (true) {
+        std::cout << "> ";
+        std::cin >> input;
+        if (input == "q" || input == "quit") break;
+        run(input);
+    }
 }
 
 int main(int argc, char *argv[]) {

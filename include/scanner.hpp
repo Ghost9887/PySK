@@ -6,6 +6,7 @@
 class Scanner {
 public:
     Scanner();
+    Scanner(std::string content);
     ~Scanner() = default;
     void load(const char *file_name);
     void tokenize();

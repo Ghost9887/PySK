@@ -1,6 +1,7 @@
 #include "scanner.hpp"
 
 Scanner::Scanner() : ip(0), content() {}
+Scanner::Scanner(std::string content) : ip(0), content(content) {}
 
 void Scanner::load(const char *file_name) {
     auto size = std::filesystem::file_size(file_name);
@@ -91,4 +92,5 @@ void Scanner::print_tokens() {
     for (Token token : tokens) {
         std::cout << "[" << lookup_table.at(token) << "] ";
     }
+    std::cout << '\n';
 }
