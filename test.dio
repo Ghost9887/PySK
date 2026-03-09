@@ -1,4 +1,7 @@
-"Hello, World!"
-,.(){}
-3555
-;
+a = 5;
+b = 10;
+ked (a > b) {
+    vytlac(Hello, World);
+}inak {
+    vytlac(Hello, Svet);
+}

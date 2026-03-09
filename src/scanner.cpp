@@ -49,25 +49,13 @@ void Scanner::tokenize() {
                 add_token(TokenType::R_BRACKET);
                 break;
             case '=':
-                if (expected_next('=')) {
-                    add_token(TokenType::EQUALS_EQUALS);
-                    advance();
-                }
-                else add_token(TokenType::EQUALS);
+                expected_next('=') ? add_token(TokenType::EQUALS_EQUALS) : add_token(TokenType::EQUALS);
                 break;
             case '>':
-                if (expected_next('=')) { 
-                    add_token(TokenType::GREATER_EQUALS);
-                    advance();
-                }
-                else add_token(TokenType::GREATER);
+                expected_next('=') ? add_token(TokenType::GREATER_EQUALS) : add_token(TokenType::GREATER);
                 break;
             case '<':
-                if (expected_next('=')) {
-                    add_token(TokenType::LESSER_EQUALS);
-                    advance();
-                }
-                else add_token(TokenType::LESSER);
+                expected_next('=') ? add_token(TokenType::LESSER_EQUALS) : add_token(TokenType::LESSER);
                 break;
             case '.':
                 add_token(TokenType::DOT);
@@ -122,6 +110,7 @@ std::optional<char> Scanner::peek_next() {
 
 bool Scanner::expected_next(char c) {
     if (ip + 1 < content.length()) {
+        advance();
         return content.at(ip + 1) == c;
     }
     return false;
@@ -180,4 +169,8 @@ void Scanner::print_tokens() {
         token.print();
     }
     std::cout << '\n';
+}
+
+std::vector<Token> Scanner::get_tokens() {
+    return tokens;
 }
