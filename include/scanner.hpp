@@ -13,7 +13,7 @@ public:
     void tokenize();
     void print_tokens();
     std::string get_output();
-    std::vector<Token> get_tokens();
+    std::vector<Token> &get_tokens();
 private:
     std::vector<Token> tokens;
     std::string content;

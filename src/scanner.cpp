@@ -57,6 +57,9 @@ void Scanner::tokenize() {
             case '<':
                 expected_next('=') ? add_token(TokenType::LESSER_EQUALS) : add_token(TokenType::LESSER);
                 break;
+            case '!':
+                expected_next('=') ? add_token(TokenType::NOT_EQUALS) : add_token(TokenType::NOT);
+                break;
             case '.':
                 add_token(TokenType::DOT);
                 break;
@@ -162,7 +165,7 @@ void Scanner::print_tokens() {
     std::cout << output << '\n';
 }
 
-std::vector<Token> Scanner::get_tokens() {
+std::vector<Token> &Scanner::get_tokens() {
     return tokens;
 }
 

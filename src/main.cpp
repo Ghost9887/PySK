@@ -1,11 +1,14 @@
 #include "common.hpp"
-#include "scanner.hpp"
+#include "parser.hpp"
 
 void run(const char *file_name) {
     Scanner scanner;
     scanner.load(file_name);
     scanner.tokenize();
     scanner.print_tokens();
+
+    Parser parser(scanner.get_tokens());
+    parser.parse();
 }
 
 void run(std::string content) {
