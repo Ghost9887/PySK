@@ -149,8 +149,13 @@ void Scanner::parse_identifier() {
         advance();
     }
 
-    identifier += '"';
-    add_token(TokenType::IDENTIFIER, identifier);
+    if (peek().has_value() && peek().value() == '"') {
+        identifier += '"';
+        add_token(TokenType::IDENTIFIER, identifier);
+    }else {
+        std::cout << "Unterminated string" << '\n';
+        exit(1);
+    }
 }
 
 void Scanner::add_token(TokenType type, int value) {

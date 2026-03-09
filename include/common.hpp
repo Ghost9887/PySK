@@ -20,6 +20,6 @@ typedef enum {
     INAK_KED, AK, POKIAL, VRATIT,  FUNK
 }TokenType;
 
-extern std::unordered_map<TokenType, std::string> lookup_table;
+extern std::unordered_map<TokenType, std::string> tokens_table;
 
 #endif

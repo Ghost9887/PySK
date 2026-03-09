@@ -1,7 +1,7 @@
 #include "common.hpp"
 #include "token.hpp"
 
-std::unordered_map<TokenType, std::string> lookup_table = {
+std::unordered_map<TokenType, std::string> tokens_table = {
     {EOS, "EOS"},
     {PLUS, "Plus"},
     {SUB, "Sub"},

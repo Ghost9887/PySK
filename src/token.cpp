@@ -10,13 +10,13 @@ void Token::print() {
     if (literal.has_value()) {
         std::cout 
             << "[" 
-            << lookup_table.at(type) 
+            << tokens_table.at(type) 
             << ", " 
             << lexeme 
             << ", " 
             << std::to_string(line) 
             << "]";
     }else {
-        std::cout << "[" << lookup_table.at(type) << ", " << std::to_string(line) << "]";
+        std::cout << "[" << tokens_table.at(type) << ", " << std::to_string(line) << "]";
     }
 }
