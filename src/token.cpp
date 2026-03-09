@@ -6,17 +6,17 @@ Token::Token(TokenType type, std::string lexeme, std::optional<Literal> literal,
     literal(literal), 
     line(line) {}
 
-void Token::print() {
+std::string Token::to_string() {
     if (literal.has_value()) {
-        std::cout 
-            << "[" 
-            << tokens_table.at(type) 
-            << ", " 
-            << lexeme 
-            << ", " 
-            << std::to_string(line) 
-            << "]";
+        return 
+            "[" 
+            + tokens_table.at(type) 
+            + ", " 
+            + lexeme 
+            + ", " 
+            + std::to_string(line) 
+            + "]";
     }else {
-        std::cout << "[" << tokens_table.at(type) << ", " << std::to_string(line) << "]";
+        return "[" + tokens_table.at(type) + ", " + std::to_string(line) + "]";
     }
 }

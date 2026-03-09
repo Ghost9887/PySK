@@ -9,7 +9,7 @@ class Token {
 public:
     Token(TokenType type, std::string lexeme, std::optional<Literal> literal, int line);
     ~Token() = default;
-    void print();
+    std::string to_string();
 private:
     TokenType type;
     std::string lexeme;

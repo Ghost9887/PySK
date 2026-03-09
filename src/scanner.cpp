@@ -165,12 +165,21 @@ void Scanner::add_token(TokenType type) {
 }
 
 void Scanner::print_tokens() {
+    std::string output = "";
     for (Token token : tokens) {
-        token.print();
+        output += token.to_string();
     }
-    std::cout << '\n';
+    std::cout << output << '\n';
 }
 
 std::vector<Token> Scanner::get_tokens() {
     return tokens;
+}
+
+std::string Scanner::get_output() {
+    std::string output = "";
+    for (Token token : tokens) {
+        output += token.to_string();
+    }
+    return output;
 }
