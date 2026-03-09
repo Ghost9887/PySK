@@ -28,5 +28,18 @@ std::unordered_map<TokenType, std::string> tokens_table = {
     {AK, "Ak"},
     {POKIAL, "Pokial"},
     {VRATIT, "Vratit"},
-    {FUNK, "Funk"}
+    {FUNK, "Funk"},
+    {TRIEDA, "Trieda"}
+};
+
+std::unordered_map<std::string, TokenType> keywords_table = {
+    {"vytlac", VYTLAC},
+    {"ked", KED},
+    {"inak", INAK},
+    {"inaked", INAK_KED},
+    {"ak", AK},
+    {"pokial", POKIAL},
+    {"vratit", VRATIT},
+    {"funk", FUNK},
+    {"trieda", TRIEDA}
 };

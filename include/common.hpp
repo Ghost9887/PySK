@@ -17,9 +17,11 @@ typedef enum {
     GREATER_EQUALS, LESSER_EQUALS, EQUALS_EQUALS, 
 
     IDENTIFIER, NUMBER, VYTLAC, KED, INAK, 
-    INAK_KED, AK, POKIAL, VRATIT,  FUNK
+    INAK_KED, AK, POKIAL, VRATIT,  FUNK,
+    TRIEDA
 }TokenType;
 
 extern std::unordered_map<TokenType, std::string> tokens_table;
+extern std::unordered_map<std::string, TokenType> keywords_table;
 
 #endif

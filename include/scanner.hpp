@@ -23,6 +23,7 @@ private:
     bool expected_next(char c);
     bool is_at_end();
     bool is_number(char c);
+    bool is_alphanumeric(char c);
     void parse_number();
     void parse_identifier();
     void add_token(TokenType type);

@@ -76,7 +76,6 @@ void Scanner::tokenize() {
                 add_token(TokenType::COMMA);
                 break;
             case '"':
-                parse_identifier();
                 break;
             case '\n':
                 line++;
@@ -87,6 +86,9 @@ void Scanner::tokenize() {
             default: 
                 if (is_number(c)) {
                     parse_number();
+                    continue;
+                }else if (is_alphanumeric(c)) {
+                    parse_identifier();
                     continue;
                 }
                 std::cout << "Invalid syntax: " << content.at(ip) << '\n';
@@ -129,6 +131,14 @@ bool Scanner::is_number(char c) {
     return '0' <= c && c <= '9';
 }
 
+bool Scanner::is_alphanumeric(char c) {
+    return 
+        is_number(c) 
+        || ('a' <= c && c <= 'z') 
+        || ('A' <= c && c <= 'Z')
+        || (c == '_'); 
+}
+
 void Scanner::parse_number() {
     std::string num = "";
     do {
@@ -141,20 +151,15 @@ void Scanner::parse_number() {
 
 void Scanner::parse_identifier() {
     std::string identifier = "";
-    identifier += '"';
-    advance();
-
-    while (peek().has_value() && peek().value() != '"') {
+    do {
         identifier += content.at(ip);
         advance();
-    }
+    } while(!is_at_end() && is_alphanumeric(content.at(ip)));
 
-    if (peek().has_value() && peek().value() == '"') {
-        identifier += '"';
-        add_token(TokenType::IDENTIFIER, identifier);
+    if (keywords_table.find(identifier) != keywords_table.end()) {
+        add_token(keywords_table.at(identifier));
     }else {
-        std::cout << "Unterminated string" << '\n';
-        exit(1);
+        add_token(TokenType::IDENTIFIER, identifier);
     }
 }
 
