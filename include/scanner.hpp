@@ -28,9 +28,16 @@ private:
     bool is_alphanumeric(char c);
     void parse_number();
     void parse_identifier();
-    void add_token(TokenType type);
-    void add_token(TokenType type, int value); 
-    void add_token(TokenType type, std::string value);
+
+    template <typename T>
+    void add_token(TokenType type, T value) {
+        std::stringstream stream;
+        stream << value;
+        tokens.emplace_back(Token(type, stream.str(), value, line));
+    }
+    void add_token(TokenType type) {
+        tokens.emplace_back(Token(type, "", std::nullopt, line));
+    }
 };
 
 #endif

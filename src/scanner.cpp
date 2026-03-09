@@ -110,8 +110,10 @@ std::optional<char> Scanner::peek_next() {
 
 bool Scanner::expected_next(char c) {
     if (ip + 1 < content.length()) {
-        advance();
-        return content.at(ip + 1) == c;
+        if (content.at(ip + 1) == c) {
+            advance();
+            return true;
+        }
     }
     return false;
 }
@@ -150,18 +152,6 @@ void Scanner::parse_identifier() {
     }else {
         add_token(TokenType::IDENTIFIER, identifier);
     }
-}
-
-void Scanner::add_token(TokenType type, int value) {
-    tokens.emplace_back(Token(type, std::to_string(value), value, line));
-}
-
-void Scanner::add_token(TokenType type, std::string value) {
-    tokens.emplace_back(Token(type, value, value, line));
-}
-
-void Scanner::add_token(TokenType type) {
-    tokens.emplace_back(Token(type, "", std::nullopt, line));
 }
 
 void Scanner::print_tokens() {
