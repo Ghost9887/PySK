@@ -30,7 +30,6 @@ void Scanner::tokenize() {
             case '-':
                 add_token(TokenType::SUB);
                 break;
-            
             case '*':
                 add_token(TokenType::STAR);
                 break;
@@ -46,6 +45,9 @@ void Scanner::tokenize() {
             case '}':
                 add_token(TokenType::R_BRACKET);
                 break;
+            case '"':
+                parse_string();
+                continue;
             case '/':
                 expected_next('/') ? parse_comment() : add_token(TokenType::SLASH);
                 break;
@@ -66,8 +68,6 @@ void Scanner::tokenize() {
                 break;
             case ',':
                 add_token(TokenType::COMMA);
-                break;
-            case '"':
                 break;
             case '\n':
                 line++;
@@ -156,6 +156,23 @@ void Scanner::parse_identifier() {
     }else {
         add_token(TokenType::IDENTIFIER, identifier);
     }
+}
+
+void Scanner::parse_string() {
+    std::string str = "";
+    advance();
+    while (!is_at_end() && peek().value() != '"') {
+        if (peek() == '\n') line++;
+        else str += peek().value();
+        advance();
+    }
+
+    if (is_at_end()) {
+        std::cout << "Unterminated string" << '\n';
+        exit(1);
+    }
+    advance();
+    add_token(TokenType::STRING, str);
 }
 
 void Scanner::parse_comment() {

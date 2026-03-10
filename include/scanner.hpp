@@ -28,6 +28,7 @@ private:
     bool is_alphanumeric(char c);
     void parse_number();
     void parse_identifier();
+    void parse_string();
     void parse_comment();
 
     template <typename T>

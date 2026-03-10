@@ -24,6 +24,7 @@ std::unordered_map<TokenType, std::string> tokens_table = {
     {IDENTIFIER, "Identifier"},
     {VYTLAC, "Vytlac"},
     {NUMBER, "Number"},
+    {STRING, "String"},
     {KED, "Ked"},
     {INAK, "Inak"},
     {INAK_KED, "InakKed"},
