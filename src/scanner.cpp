@@ -123,7 +123,7 @@ bool Scanner::expected_next(char c) {
 }
 
 bool Scanner::is_number(char c) {
-    return '0' <= c && c <= '9';
+    return ('0' <= c && c <= '9') || c == '.';
 }
 
 bool Scanner::is_alphanumeric(char c) {
@@ -136,12 +136,21 @@ bool Scanner::is_alphanumeric(char c) {
 
 void Scanner::parse_number() {
     std::string num = "";
+    bool decimal = false;
     do {
-        num += content.at(ip);
+        if (peek().value() == '.') {
+            if (!decimal) {
+                decimal = true;
+            } else {
+                std::cout << "Invalid number" << '\n';
+                exit(1);
+            }
+        }
+        num += peek().value();
         advance();
     }while (!is_at_end() && is_number(content.at(ip)));
-
-    add_token(TokenType::NUMBER, std::stoi(num));
+    
+    decimal ? add_token(TokenType::NUMBER, std::stof(num)) : add_token(TokenType::NUMBER, std::stoi(num));
 }
 
 void Scanner::parse_identifier() {
