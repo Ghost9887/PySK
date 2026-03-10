@@ -15,7 +15,7 @@ private:
     void scan_token();
     char advance();
     void add_token(TokenType type);
-    void add_token(TokenType type, Literal literal);
+    void add_token(TokenType type, LiteralValue literal);
     bool match(const char c);
     char peek();
     char peek_next();

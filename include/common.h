@@ -8,6 +8,8 @@
 #include <optional>
 #include <unordered_map>
 #include <variant>
+#include <any>
+#include <sstream>
 
 typedef enum {
     L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA,

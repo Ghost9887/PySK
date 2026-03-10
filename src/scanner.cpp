@@ -104,7 +104,7 @@ void Scanner::add_token(TokenType type) {
     add_token(type, std::monostate{});
 }
 
-void Scanner::add_token(TokenType type, Literal literal) {
+void Scanner::add_token(TokenType type, LiteralValue literal) {
     std::string text = content.substr(start, current - start);
     tokens.emplace_back(Token(type, text, literal, line, current));
 }

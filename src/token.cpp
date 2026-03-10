@@ -1,6 +1,6 @@
 #include "token.h"
 
-Token::Token(TokenType type, std::string lexeme, Literal literal, int line, int column) :
+Token::Token(TokenType type, std::string lexeme, LiteralValue literal, int line, int column) :
     type(type), lexeme(lexeme), literal(literal), line(line), column(column) {}
 
 std::string Token::to_string() {
