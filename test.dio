@@ -1,7 +1,19 @@
-a = 5;
-b = 10;
-ked (a > b) {
-    vytlac(Hello, World);
-}inak {
-    vytlac(Hello, Svet);
+
+funk vynasobit (a, b) {
+    vratit a * b;
+}
+
+funk hlavna() {
+    a = 5;
+    b = 10;
+
+    vytlac(vynasobit(a, b));
+
+    ked (a > b) {
+        vytlac ("a je vacsie");
+    }inaked {
+        vytlac("b je vacsie");
+    }inak {
+        vytalc ("rovnake");
+    }
 }
