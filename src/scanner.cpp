@@ -30,9 +30,7 @@ void Scanner::tokenize() {
             case '-':
                 add_token(TokenType::SUB);
                 break;
-            case '/':
-                add_token(TokenType::SLASH);
-                break;
+            
             case '*':
                 add_token(TokenType::STAR);
                 break;
@@ -47,6 +45,9 @@ void Scanner::tokenize() {
                 break;
             case '}':
                 add_token(TokenType::R_BRACKET);
+                break;
+            case '/':
+                expected_next('/') ? parse_comment() : add_token(TokenType::SLASH);
                 break;
             case '=':
                 expected_next('=') ? add_token(TokenType::EQUALS_EQUALS) : add_token(TokenType::EQUALS);
@@ -155,6 +156,10 @@ void Scanner::parse_identifier() {
     }else {
         add_token(TokenType::IDENTIFIER, identifier);
     }
+}
+
+void Scanner::parse_comment() {
+    while(!is_at_end() && peek().value() != '\n') advance();
 }
 
 void Scanner::print_tokens() {

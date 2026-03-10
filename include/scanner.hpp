@@ -28,6 +28,7 @@ private:
     bool is_alphanumeric(char c);
     void parse_number();
     void parse_identifier();
+    void parse_comment();
 
     template <typename T>
     void add_token(TokenType type, T value) {
