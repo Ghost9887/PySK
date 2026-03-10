@@ -1,6 +1,6 @@
 #include "common.h"
 #include "dio.h"
-#include "ast_printer.hpp"
+#include "ast_printer.h"
 
 int main(int argc, char *argv[]) {
     
