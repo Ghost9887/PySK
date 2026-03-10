@@ -19,7 +19,7 @@ void Scanner::load(const char *file_name) {
 
 void Scanner::tokenize() {
     while (!is_at_end()) {
-        char c = content.at(ip);
+        char c = peek().value();
         switch (c) {
             case ';':
                 add_token(TokenType::EOS);
@@ -83,7 +83,7 @@ void Scanner::tokenize() {
                     parse_identifier();
                     continue;
                 }
-                std::cout << "Invalid syntax: " << content.at(ip) << '\n';
+                std::cout << "Invalid syntax: " << peek().value() << '\n';
                 exit(1);
         }
         advance();
@@ -148,7 +148,7 @@ void Scanner::parse_number() {
         }
         num += peek().value();
         advance();
-    }while (!is_at_end() && is_number(content.at(ip)));
+    }while (!is_at_end() && is_number(peek().value()));
     
     decimal ? add_token(TokenType::NUMBER, std::stof(num)) : add_token(TokenType::NUMBER, std::stoi(num));
 }
@@ -156,9 +156,9 @@ void Scanner::parse_number() {
 void Scanner::parse_identifier() {
     std::string identifier = "";
     do {
-        identifier += content.at(ip);
+        identifier += peek().value();
         advance();
-    } while(!is_at_end() && is_alphanumeric(content.at(ip)));
+    } while(!is_at_end() && is_alphanumeric(peek().value()));
 
     if (keywords_table.find(identifier) != keywords_table.end()) {
         add_token(keywords_table.at(identifier));
