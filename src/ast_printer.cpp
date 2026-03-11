@@ -4,15 +4,15 @@ std::string AstPrinter::print(Expr &expr) {
     return std::any_cast<std::string>(expr.accept(*this));
 }
 
-std::any AstPrinter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
+LiteralValue AstPrinter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
     return parenthesize(expr->op.lexeme, expr->left, expr->right);
 }
 
-std::any AstPrinter::visitGroupingExpr(std::shared_ptr<Grouping> expr) {
+LiteralValue AstPrinter::visitGroupingExpr(std::shared_ptr<Grouping> expr) {
     return parenthesize("group", expr->expression);
 }
 
-std::any AstPrinter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
+LiteralValue AstPrinter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
     if (std::holds_alternative<std::monostate>(expr->value)) {
         return "nic";
     }
@@ -31,7 +31,7 @@ std::any AstPrinter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
     }, expr->value);
 }
 
-std::any AstPrinter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
+LiteralValue AstPrinter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
     return parenthesize(expr->op.lexeme, expr->right);
 }
 

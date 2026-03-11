@@ -9,10 +9,10 @@ public:
     AstPrinter() = default;
     ~AstPrinter() = default;
     std::string print(Expr &expr);
-    std::any visitBinaryExpr(std::shared_ptr<Binary> expr) override;
-    std::any visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
-    std::any visitLiteralExpr(std::shared_ptr<Literal> expr) override;
-    std::any visitUnaryExpr(std::shared_ptr<Unary> expr) override;
+    LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) override;
+    LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
+    LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) override;
+    LiteralValue visitUnaryExpr(std::shared_ptr<Unary> expr) override;
 private:
     template<class... T>
     std::string parenthesize(const std::string& name, T&&... exprs);

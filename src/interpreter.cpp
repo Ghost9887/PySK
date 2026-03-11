@@ -2,111 +2,129 @@
 
 void Interpreter::interpret(std::shared_ptr<Expr> expr) {
     try {
-        std::any value = evaluate(expr);
-        //std::cout << std::to_string(value) << '\n';
+        LiteralValue value = evaluate(expr);
+        print_literal(value);
     }catch (RuntimeError error) {
-        Dio::runtime_error(error);
+        //TODO: fix circular dependacy
+        //Dio::runtime_error(error);
     }
 }
 
-std::any Interpreter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
+LiteralValue Interpreter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
     return expr->value;
 }
 
-std::any Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
-    std::any left = evaluate(expr->left);
-    std::any right = evaluate(expr->right);
+LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
+    LiteralValue left = evaluate(expr->left);
+    LiteralValue right = evaluate(expr->right);
 
     switch (expr->op.type) {
         case TokenType::GREATER:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) > std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) > std::get<double>(right);
         case TokenType::LESSER:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) < std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) < std::get<double>(right);
         case TokenType::GREATER_EQUAL:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) >= std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) >= std::get<double>(right);
         case TokenType::LESSER_EQUAL:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) <= std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) <= std::get<double>(right);
         case TokenType::BANG_EQUAL:
-            return !is_equal(std::make_shared<Literal>(left), std::make_shared<Literal>(right));
+            return !is_equal(left, right);
         case TokenType::EQUAL:
-            return is_equal(std::make_shared<Literal>(left), std::make_shared<Literal>(right));
+            return is_equal(left, right);
         case TokenType::MINUS:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) - std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) - std::get<double>(right);
         case TokenType::PLUS:
-            if (std::holds_alternative<double>(left.value) && std::holds_alternative<double>(right.value)) {
-                return std::get<double>(left.value) + std::get<double>(right.value);
-            }else if (std::holds_alternative<std::string>(left.value) && std::holds_alternative<std::string>(right.value)) {
-                return std::get<std::string>(left.value) + std::get<std::string>(right.value);
+            if (std::holds_alternative<double>(left) && std::holds_alternative<double>(right)) {
+                return std::get<double>(left) + std::get<double>(right);
+            }else if (std::holds_alternative<std::string>(left) && std::holds_alternative<std::string>(right)) {
+                return std::get<std::string>(left) + std::get<std::string>(right);
             }else {
                 throw RuntimeError(expr->op, "Operands must be numbers or strings");
             }
         case TokenType::SLASH:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) / std::get<double>(right.value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) / std::get<double>(right);
         case TokenType::STAR:
-            check_number_operand(expr->op, std::make_shared<Literal>(left), std::make_shared<Literal>(right));
-            return std::get<double>(left.value) * std::get<double>(right.value);
-    }
-
-    return NULL;
-}
-
-std::any Interpreter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
-    std::any right = evaluate(expr->right);
-
-    switch (expr->op.type) {
-        case TokenType::BANG:
-            return !is_truthy(std::make_shared<Literal>(right));
-        case TokenType::MINUS:
-            check_number_operand(expr->op, std::make_shared<Literal>(right));
-            return -std::get<double>(right->value);
+            check_number_operand(expr->op, left, right);
+            return std::get<double>(left) * std::get<double>(right);
     }
 
     return std::monostate();
 }
 
-std::any Interpreter::visitGroupingExpr(std::shared_ptr<Grouping> expr) {
+LiteralValue Interpreter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
+    LiteralValue right = evaluate(expr->right);
+
+    switch (expr->op.type) {
+        case TokenType::BANG:
+            return !is_truthy(right);
+        case TokenType::MINUS:
+            check_number_operand(expr->op, right);
+            return -std::get<double>(right);
+    }
+
+    return std::monostate();
+}
+
+LiteralValue Interpreter::visitGroupingExpr(std::shared_ptr<Grouping> expr) {
     return evaluate(expr->expression);
 }
 
-std::any Interpreter::evaluate(std::shared_ptr<Expr> expr) {
+LiteralValue Interpreter::evaluate(std::shared_ptr<Expr> expr) {
     return expr->accept(*this);
 }
 
-bool Interpreter::is_truthy(std::shared_ptr<Literal> literal) {
-    if (std::holds_alternative<std::monostate()>(literal->value)) 
+bool Interpreter::is_truthy(LiteralValue &literal) {
+    if (std::holds_alternative<std::monostate>(literal)) 
         return false;
 
-    if (std::get<bool>(literal->value) == true && std::get<bool>(literal->value) == false) 
-        return std::get<bool>(literal->value);
+    if (std::holds_alternative<bool>(literal)) 
+        return std::get<bool>(literal);
 
     return true;
 }
 
-bool Interpreter::is_equal(std::shared_ptr<Literal> right, std::shared_ptr<Literal> left) {
-    if (std::holds_alternative<std::monostate()>(right->value) 
-        && std::holds_alternative<std::monostate()>(left->value)) 
+bool Interpreter::is_equal(LiteralValue &right, LiteralValue &left) {
+    if (std::holds_alternative<std::monostate>(right) 
+        && std::holds_alternative<std::monostate>(left)) 
         return true;
 
-    if (std::holds_alternative<std::monostate()>(right->value)) 
+    if (std::holds_alternative<std::monostate>(right)) 
         return false;
 
-    return std::get<bool>(right->value) == std::get<bool>(left->value);
+    return std::get<bool>(right) == std::get<bool>(left);
 }
 
-void Interpreter::check_number_operand(Token &op, std::shared_ptr<Literal> right) {
-    if (std::holds_alternative<double>(right->value)) return;
+void Interpreter::check_number_operand(Token &op, LiteralValue &right) {
+    if (std::holds_alternative<double>(right)) return;
     throw RuntimeError(op, "Operand must be a number");
 }
 
-void Interpreter::check_number_operand(Token &op, std::shared_ptr<Literal> left, std::shared_ptr<Literal> right) {
-    if (std::holds_alternative<double>(right->value) && std::holds_alternative<double>(left->value))
+void Interpreter::check_number_operand(Token &op, LiteralValue &left, LiteralValue &right) {
+    if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left))
         return;
     
     throw RuntimeError(op, "Operands must be numbers");
+}
+
+void Interpreter::print_literal(const LiteralValue& value) {
+    std::visit([](auto&& arg) {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_same_v<T, std::monostate>) {
+            std::cout << "nic";
+        } 
+        else if constexpr (std::is_same_v<T, bool>) {
+            std::cout << (arg ? "pravda" : "nepravda");
+        } 
+        else {
+            std::cout << arg;
+        }
+    }, value);
+    std::cout << '\n';
 }
