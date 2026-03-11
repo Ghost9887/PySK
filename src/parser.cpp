@@ -67,11 +67,11 @@ std::shared_ptr<Expr> Parser::primary() {
 
     if (match(TokenType::L_PAREN)) {
         std::shared_ptr<Expr> expr = expression();
-        consume(TokenType::R_PAREN, "Expected ')' after expression.");
+        consume(TokenType::R_PAREN, "Ocakavany ')' za vyrazom.");
         return std::make_shared<Grouping>(expr);
     }
 
-    throw error(peek(), "Expected expression.");
+    throw error(peek(), "Ocakavany vyraz.");
 }
 
 std::shared_ptr<Expr> Parser::unary() {

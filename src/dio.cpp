@@ -16,7 +16,7 @@ void Dio::run_file(const char *file_name) {
     std::ifstream file(file_name);
 
     if (!file.is_open()) {
-        std::cerr << "Failed to read file: " << file_name << '\n';
+        std::cerr << "Chyba pri citani suboru: " << file_name << '\n';
         exit(1);
         return;
     }
@@ -46,9 +46,9 @@ void Dio::run_prompt() {
 
 void Dio::error(Token &token, const std::string message) {
     if (token.type == TokenType::_EOF) {
-        report(token.line, token.column, "at end ", message);
+        report(token.line, token.column, "na konci", message);
     }else {
-        report(token.line, token.column, "at '" + token.lexeme + "'", message);
+        report(token.line, token.column, "na '" + token.lexeme + "'", message);
     }
 }
 
@@ -58,14 +58,14 @@ void Dio::error(int line, int column, const std::string message) {
 
 void Dio::report(int line, int column, const std::string where, const std::string message) {
     std::cerr 
-        << "[line: " 
+        << "[riadok: " 
         << line 
-        << ", column: " 
+        << ", stlpec: " 
         << column 
-        << "] Error" 
+        << "] Chyba " 
         << where 
-        << ":" 
-        << message; 
-
+        << ": " 
+        << message 
+        << '\n';
     had_error = true;
 }
