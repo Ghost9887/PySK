@@ -16,7 +16,8 @@ std::any AstPrinter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
     if (std::holds_alternative<std::monostate>(expr->value)) {
         return "nic";
     }
-    return std::visit([](auto &&arg) -> std::string {
+    //universal reference
+    return std::visit([](auto&& arg) -> std::string {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_same_v<T, std::monostate>)
@@ -34,11 +35,14 @@ std::any AstPrinter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
     return parenthesize(expr->op.lexeme, expr->right);
 }
 
-template<typename... Expr>
-std::string AstPrinter::parenthesize(const std::string& name, Expr&&... exprs) {
+template<class... T>
+std::string AstPrinter::parenthesize(const std::string& name, T&&... exprs) {
     std::string output = "( " + name;
-    ((output += " ", output += std::any_cast<std::string>(exprs->accept(*this))), ...);
+    for (auto e : {exprs...}) {
+        output += " " + std::any_cast<std::string>(e->accept(*this));
+    }
     output += " )";
+
     return output;
 }
 

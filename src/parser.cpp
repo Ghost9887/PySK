@@ -124,9 +124,9 @@ std::shared_ptr<Expr> Parser::expression() {
     return equality();
 }
 
-template<typename... TokenType>
-bool Parser::match(TokenType... types) {
-    for (auto t : {types...}) {
+template<typename... T>
+bool Parser::match(T... types) {
+    for (TokenType t : {types...}) {
         if (check(t)) {
             advance();
             return true;

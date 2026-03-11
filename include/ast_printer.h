@@ -14,7 +14,7 @@ public:
     std::any visitLiteralExpr(std::shared_ptr<Literal> expr) override;
     std::any visitUnaryExpr(std::shared_ptr<Unary> expr) override;
 private:
-    template<typename... Expr>
-    std::string parenthesize(const std::string& name, Expr&&... exprs);
+    template<class... T>
+    std::string parenthesize(const std::string& name, T&&... exprs);
 };
 #endif
