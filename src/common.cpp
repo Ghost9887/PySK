@@ -9,6 +9,7 @@ std::unordered_map<TokenType, std::string> tokens_map = {
     {DOT, "Dot"},
     {MINUS, "Minus"},
     {PLUS, "Plus"},
+    {PERCENT, "Percent"},
     {SEMICOLON, "Semicolon"},
     {SLASH, "Slash"},
     {STAR, "Star"},

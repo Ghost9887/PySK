@@ -4,7 +4,7 @@ Binary::Binary(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right
     : left(left), op(op), right(right) {}
 std::any Binary::accept(ExprVisitor &visitor) {
         return visitor.visitBinaryExpr(shared_from_this());
-    }
+}
 
 
 Grouping::Grouping(std::shared_ptr<Expr> expression) 
