@@ -6,10 +6,10 @@ void Dio::run(const std::string content) {
     Parser parser(tokens);
     std::shared_ptr<Expr> expression = parser.parse();
 
-    if (had_error) return;
+    if (had_error) exit(1);
+    if (had_runtime_error) exit(1);
     
-    AstPrinter printer;
-    std::cout << printer.print(*expression) << '\n';
+    interpreter.interpret(expression);
 }
 
 void Dio::run_file(const char *file_name) {
@@ -54,6 +54,17 @@ void Dio::error(Token &token, const std::string message) {
 
 void Dio::error(int line, int column, const std::string message) {
     report(line, column,  "", message);
+}
+
+void Dio::runtime_error(RuntimeError &error) {
+    std::cout 
+        << error.what() 
+        << "\n[line: " 
+        << error.token.line 
+        << ", column: "
+        << error.token.column
+        << "]";
+    had_runtime_error = true;
 }
 
 void Dio::report(int line, int column, const std::string where, const std::string message) {

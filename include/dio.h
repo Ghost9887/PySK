@@ -6,6 +6,8 @@
 #include "scanner.h"
 #include "ast_printer.h"
 #include "parser.h"
+#include "runtime_error.h"
+#include "interpreter.h"
 
 class Dio {
 public:
@@ -13,10 +15,13 @@ public:
     static void run_prompt();
     static void error(int line, int column, const std::string message);
     static void error(Token &token, const std::string message);
+    static void runtime_error(RuntimeError &error);
 private:
+    static Interpreter interpreter;
     static void run(const std::string content);
     static void report(int line, int column, const std::string where, const std::string message);
     inline static bool had_error = false;
+    inline static bool had_runtime_error = false;
 };
 
 #endif
