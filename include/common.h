@@ -10,6 +10,7 @@
 #include <variant>
 #include <any>
 #include <sstream>
+#include <stdexcept>
 
 typedef enum {
     L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA,

@@ -3,11 +3,13 @@
 void Dio::run(const std::string content) {
     Scanner scanner(content);
     std::vector<Token> tokens = scanner.scan_tokens();
+    Parser parser(tokens);
+    std::shared_ptr<Expr> expression = parser.parse();
 
-    for (Token token : tokens) {
-        std::cout << token.to_string();
-    }
-    std::cout << '\n';
+    if (had_error) return;
+    
+    AstPrinter printer;
+    std::cout << printer.print(*expression) << '\n';
 }
 
 void Dio::run_file(const char *file_name) {
@@ -39,6 +41,14 @@ void Dio::run_prompt() {
         if (content == "q") break;
         run(content);
         had_error = false;
+    }
+}
+
+void Dio::error(Token &token, const std::string message) {
+    if (token.type == TokenType::_EOF) {
+        report(token.line, token.column, "at end ", message);
+    }else {
+        report(token.line, token.column, "at '" + token.lexeme + "'", message);
     }
 }
 

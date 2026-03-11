@@ -4,15 +4,15 @@
 #include "common.h"
 #include "expr.h"
 
-class AstPrinter : public ExprVisitor, public std::enable_shared_from_this<AstPrinter> {
+class AstPrinter : public Expr::ExprVisitor, public std::enable_shared_from_this<AstPrinter> {
 public:
     AstPrinter() = default;
     ~AstPrinter() = default;
     std::string print(Expr &expr);
-    std::any visitBinaryExpr(std::shared_ptr<Binary> expr);
-    std::any visitGroupingExpr(std::shared_ptr<Grouping> expr);
-    std::any visitLiteralExpr(std::shared_ptr<Literal> expr);
-    std::any visitUnaryExpr(std::shared_ptr<Unary> expr);
+    std::any visitBinaryExpr(std::shared_ptr<Binary> expr) override;
+    std::any visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
+    std::any visitLiteralExpr(std::shared_ptr<Literal> expr) override;
+    std::any visitUnaryExpr(std::shared_ptr<Unary> expr) override;
 private:
     template<typename... Expr>
     std::string parenthesize(const std::string& name, Expr&&... exprs);
