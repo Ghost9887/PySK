@@ -1,13 +1,13 @@
 #ifndef EXPR_HPP
 #define EXPR_HPP
 
-#include "common.h"
 #include "token.h"
 
 class Binary;
 class Grouping;
 class Literal;
 class Unary;
+class Variable;
 
 //abstract base class
 class Expr {
@@ -20,6 +20,7 @@ public:
         virtual LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) = 0;
         virtual LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) = 0;
         virtual LiteralValue visitUnaryExpr(std::shared_ptr<Unary> expr) = 0;
+        virtual LiteralValue visitVariableExpr(std::shared_ptr<Variable> expr) = 0;
         virtual ~ExprVisitor() = default;
     };
 
@@ -58,6 +59,14 @@ public:
     std::shared_ptr<Expr> right;
 public:
     Unary(Token op, std::shared_ptr<Expr> right);
+    LiteralValue accept(ExprVisitor &visitor) override;
+};
+
+class Variable : public Expr, public std::enable_shared_from_this<Variable> {
+public:
+    Token name;
+public:
+    Variable(Token name);
     LiteralValue accept(ExprVisitor &visitor) override;
 };
 

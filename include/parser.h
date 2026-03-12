@@ -1,7 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "common.h"
 #include "expr.h"
 #include "stmnt.h"
 #include "dio.h"
@@ -20,6 +19,8 @@ private:
     std::vector<Token> tokens;
     int current;
 private:
+    std::shared_ptr<Stmnt> let_declaration();
+    std::shared_ptr<Stmnt> declaration();
     std::shared_ptr<Stmnt> statement(); 
     std::shared_ptr<Stmnt> print_statement();
     std::shared_ptr<Stmnt> expression_statement();

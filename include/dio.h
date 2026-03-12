@@ -1,12 +1,9 @@
 #ifndef DIO_H
 #define DIO_H
 
-#include "common.h"
-#include "token.h"
 #include "scanner.h"
 #include "ast_printer.h"
 #include "parser.h"
-#include "runtime_error.h"
 #include "interpreter.h"
 
 class Dio {

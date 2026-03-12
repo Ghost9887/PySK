@@ -1,12 +1,12 @@
 #ifndef STMNT_H
 #define STMNT_H
 
-#include "common.h"
 #include "token.h"
 #include "expr.h"
 
 class Expression;
 class Print;
+class Let;
 
 //abstract base class
 class Stmnt {
@@ -17,6 +17,7 @@ public:
     public:
         virtual LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) = 0;
         virtual LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) = 0;
+        virtual LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) = 0;
         virtual ~StmntVisitor() = default;
     };
 
@@ -36,6 +37,15 @@ public:
     std::shared_ptr<Expr> expression;
 public:
     Print(std::shared_ptr<Expr> expression);
+    LiteralValue accept(StmntVisitor &visitor) override;
+};
+
+class Let : public Stmnt, public std::enable_shared_from_this<Let> {
+public:
+    Token name;
+    std::shared_ptr<Expr> initializer;
+public:
+    Let(Token name, std::shared_ptr<Expr> initializer);
     LiteralValue accept(StmntVisitor &visitor) override;
 };
 

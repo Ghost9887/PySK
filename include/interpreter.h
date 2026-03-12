@@ -1,10 +1,10 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include "common.h"
 #include "expr.h"
 #include "stmnt.h"
 #include "runtime_error.h"
+#include "environment.h"
 
 class Dio;
 
@@ -13,13 +13,17 @@ class Interpreter : public Expr::ExprVisitor, public Stmnt::StmntVisitor,
 public:
     Interpreter() = default;
     ~Interpreter() = default;
-    LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> expr) override;
-    LiteralValue visitPrintStmnt(std::shared_ptr<Print> expr) override;
+    LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
+    LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
+    LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;
+    LiteralValue visitVariableExpr(std::shared_ptr<Variable> stmnt) override;
     LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) override;
     LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) override;
     LiteralValue visitUnaryExpr(std::shared_ptr<Unary> expr) override;
     LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
     void interpret(std::vector<std::shared_ptr<Stmnt>> statements);
+private:
+    Environment env;
 private:
     LiteralValue evaluate(std::shared_ptr<Expr> expr);
     void execute(std::shared_ptr<Stmnt> stmnt);

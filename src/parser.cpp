@@ -7,7 +7,7 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
     std::vector<std::shared_ptr<Stmnt>> statements;
 
     while (!is_at_end()) {
-        statements.push_back(statement());
+        statements.push_back(declaration());
     }
 
     return statements;
@@ -44,6 +44,26 @@ void Parser::synchronize() {
 ParseError Parser::error(Token &token, std::string message) {
     Dio::error(token, message);
     return ParseError();
+}
+
+std::shared_ptr<Stmnt> Parser::declaration() {
+    try {
+        if (match(TokenType::LET)) return let_declaration();
+        return statement();
+    }catch (ParseError error) {
+        synchronize();
+        return nullptr;
+    }
+}
+
+std::shared_ptr<Stmnt> Parser::let_declaration() {
+    Token name = consume(TokenType::IDENTIFIER, "Ocakavany nazov premeny");
+
+    std::shared_ptr<Expr> initializer = nullptr;
+    if (match(TokenType::EQUAL)) initializer = expression();
+
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom");
+    return std::make_shared<Let>(name, initializer);
 }
 
 std::shared_ptr<Stmnt> Parser::statement() {
@@ -86,6 +106,8 @@ std::shared_ptr<Expr> Parser::primary() {
     if (match(TokenType::NUMBER, TokenType::STRING)) {
         return std::make_shared<Literal>(previous().literal);
     }
+
+    if (match(TokenType::IDENTIFIER)) return std::make_shared<Variable>(previous());
 
     if (match(TokenType::L_PAREN)) {
         std::shared_ptr<Expr> expr = expression();

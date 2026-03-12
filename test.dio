@@ -1,3 +1,4 @@
-vytlac 1 + 2;
-vytlac "hello, world!";
-vytlac pravda;
+let a = 5;
+let b = 5;
+
+vytlac a + b;

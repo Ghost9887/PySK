@@ -11,6 +11,16 @@ void Interpreter::interpret(std::vector<std::shared_ptr<Stmnt>> statements) {
     }
 }
 
+LiteralValue Interpreter::visitLetStmnt(std::shared_ptr<Let> stmnt) {
+    LiteralValue value = std::monostate();
+    if (stmnt->initializer != nullptr) {
+        value = evaluate(stmnt->initializer);
+    }
+
+    env.define(stmnt->name, value);
+    return std::monostate();
+}
+
 LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt) {
     evaluate(stmnt->expression);
     return std::monostate();
@@ -20,6 +30,10 @@ LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
     LiteralValue value = evaluate(stmnt->expression);
     print_literal(value);
     return std::monostate();
+}
+
+LiteralValue Interpreter::visitVariableExpr(std::shared_ptr<Variable> expr) {
+    return env.get(expr->name);
 }
 
 LiteralValue Interpreter::visitLiteralExpr(std::shared_ptr<Literal> expr) {

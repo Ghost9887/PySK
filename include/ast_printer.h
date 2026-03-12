@@ -1,7 +1,6 @@
 #ifndef AST_PRINTER_H
 #define AST_PRINTER_H
 
-#include "common.h"
 #include "expr.h"
 
 class AstPrinter : public Expr::ExprVisitor, public std::enable_shared_from_this<AstPrinter> {
