@@ -1,13 +1,25 @@
 #include "interpreter.h"
 #include "dio.h"
 
-void Interpreter::interpret(std::shared_ptr<Expr> expr) {
+void Interpreter::interpret(std::vector<std::shared_ptr<Stmnt>> statements) {
     try {
-        LiteralValue value = evaluate(expr);
-        print_literal(value);
+        for (int i = 0; i < statements.size(); i++) {
+            execute(statements.at(i));
+        }
     }catch (RuntimeError error) {
         Dio::runtime_error(error);
     }
+}
+
+LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt) {
+    evaluate(stmnt->expression);
+    return std::monostate();
+}
+
+LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
+    LiteralValue value = evaluate(stmnt->expression);
+    print_literal(value);
+    return std::monostate();
 }
 
 LiteralValue Interpreter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
@@ -88,6 +100,10 @@ LiteralValue Interpreter::visitGroupingExpr(std::shared_ptr<Grouping> expr) {
 
 LiteralValue Interpreter::evaluate(std::shared_ptr<Expr> expr) {
     return expr->accept(*this);
+}
+
+void Interpreter::execute(std::shared_ptr<Stmnt> stmnt) {
+    stmnt->accept(*this);
 }
 
 bool Interpreter::is_truthy(LiteralValue &literal) {

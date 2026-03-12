@@ -2,8 +2,8 @@
 #define PARSER_H
 
 #include "common.h"
-#include "token.h"
 #include "expr.h"
+#include "stmnt.h"
 #include "dio.h"
 
 class ParseError : public std::runtime_error {
@@ -15,11 +15,14 @@ class Parser {
 public:
     Parser(std::vector<Token> tokens);
     ~Parser() = default;
-    std::shared_ptr<Expr> parse();
+    std::vector<std::shared_ptr<Stmnt>> parse();
 private:
     std::vector<Token> tokens;
     int current;
 private:
+    std::shared_ptr<Stmnt> statement(); 
+    std::shared_ptr<Stmnt> print_statement();
+    std::shared_ptr<Stmnt> expression_statement();
     std::shared_ptr<Expr> expression();
     std::shared_ptr<Expr> equality();
     std::shared_ptr<Expr> comparison();

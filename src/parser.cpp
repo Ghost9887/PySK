@@ -3,12 +3,14 @@
 Parser::Parser(std::vector<Token> tokens) 
     : tokens(std::move(tokens)), current(0) {}
 
-std::shared_ptr<Expr> Parser::parse() {
-    try {
-        return expression();
-    }catch (ParseError error) {
-        return NULL;
+std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
+    std::vector<std::shared_ptr<Stmnt>> statements;
+
+    while (!is_at_end()) {
+        statements.push_back(statement());
     }
+
+    return statements;
 }
 
 Token &Parser::consume(TokenType type, std::string message) {
@@ -42,6 +44,26 @@ void Parser::synchronize() {
 ParseError Parser::error(Token &token, std::string message) {
     Dio::error(token, message);
     return ParseError();
+}
+
+std::shared_ptr<Stmnt> Parser::statement() {
+    if (match(TokenType::VYTLAC)) return print_statement();
+
+    return expression_statement();
+}
+
+std::shared_ptr<Stmnt> Parser::print_statement() {
+    std::shared_ptr<Expr> expr = expression();
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom.");
+
+    return std::make_shared<Print>(expr);
+}
+
+std::shared_ptr<Stmnt> Parser::expression_statement() {
+    std::shared_ptr<Expr> expr = expression();
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom.");
+
+    return std::make_shared<Expression>(expr);
 }
 
 std::shared_ptr<Expr> Parser::comparison() {

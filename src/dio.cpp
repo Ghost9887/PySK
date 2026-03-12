@@ -4,12 +4,12 @@ void Dio::run(const std::string content) {
     Scanner scanner(content);
     std::vector<Token> tokens = scanner.scan_tokens();
     Parser parser(tokens);
-    std::shared_ptr<Expr> expression = parser.parse();
+    std::vector<std::shared_ptr<Stmnt>> statements = parser.parse();
 
     if (had_error) exit(1);
     if (had_runtime_error) exit(1);
     
-    interpreter.interpret(expression);
+    interpreter.interpret(statements);
 }
 
 void Dio::run_file(const char *file_name) {
