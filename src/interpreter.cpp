@@ -1,12 +1,12 @@
 #include "interpreter.h"
+#include "dio.h"
 
 void Interpreter::interpret(std::shared_ptr<Expr> expr) {
     try {
         LiteralValue value = evaluate(expr);
         print_literal(value);
     }catch (RuntimeError error) {
-        //TODO: fix circular dependacy
-        //Dio::runtime_error(error);
+        Dio::runtime_error(error);
     }
 }
 
@@ -46,6 +46,9 @@ LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
             }else {
                 throw RuntimeError(expr->op, "Operands must be numbers or strings");
             }
+        case TokenType::PERCENT:
+            check_number_operand(expr->op, left, right);
+            return static_cast<int>(std::get<double>(left)) % static_cast<int>(std::get<double>(right));
         case TokenType::SLASH:
             check_number_operand(expr->op, left, right);
             return std::get<double>(left) / std::get<double>(right);
@@ -106,7 +109,8 @@ void Interpreter::check_number_operand(Token &op, LiteralValue &right) {
 }
 
 void Interpreter::check_number_operand(Token &op, LiteralValue &left, LiteralValue &right) {
-    if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left))
+    if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left) ||
+        std::holds_alternative<int>(right) && std::holds_alternative<int>(left))
         return;
     
     throw RuntimeError(op, "Operands must be numbers");

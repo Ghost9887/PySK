@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-using LiteralValue = std::variant<std::monostate, double, std::string, bool>;
+using LiteralValue = std::variant<std::monostate, double, int, std::string, bool>;
 
 class Token {
 public:

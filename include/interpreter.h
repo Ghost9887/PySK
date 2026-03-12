@@ -5,6 +5,8 @@
 #include "expr.h"
 #include "runtime_error.h"
 
+class Dio;
+
 class Interpreter : public Expr::ExprVisitor, public std::enable_shared_from_this<Interpreter> {
 public:
     Interpreter() = default;
