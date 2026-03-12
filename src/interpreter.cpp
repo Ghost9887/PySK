@@ -44,7 +44,7 @@ LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
             }else if (std::holds_alternative<std::string>(left) && std::holds_alternative<std::string>(right)) {
                 return std::get<std::string>(left) + std::get<std::string>(right);
             }else {
-                throw RuntimeError(expr->op, "Operands must be numbers or strings");
+                throw RuntimeError(expr->op, "vyraz musi byt zlozeni s cisel alebo textu");
             }
         case TokenType::PERCENT:
             check_number_operand(expr->op, left, right);
@@ -113,15 +113,14 @@ bool Interpreter::is_equal(LiteralValue &right, LiteralValue &left) {
 
 void Interpreter::check_number_operand(Token &op, LiteralValue &right) {
     if (std::holds_alternative<double>(right)) return;
-    throw RuntimeError(op, "Operand must be a number");
+    throw RuntimeError(op, "vyraz musi byt zlozeni s cisel");
 }
 
 void Interpreter::check_number_operand(Token &op, LiteralValue &left, LiteralValue &right) {
-    if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left) ||
-        std::holds_alternative<int>(right) && std::holds_alternative<int>(left))
+    if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left))
         return;
     
-    throw RuntimeError(op, "Operands must be numbers");
+    throw RuntimeError(op, "vyraz musi byt zlozeni s cisel");
 }
 
 void Interpreter::print_literal(const LiteralValue& value) {

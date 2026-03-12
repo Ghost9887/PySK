@@ -153,17 +153,15 @@ bool Scanner::is_digit(const char c) {
 }
 
 void Scanner::number() {
-    bool is_double = false;
     while (is_digit(peek())) advance();
     
     if (peek() == '.' && is_digit(peek_next())) {
-        is_double = true;
         advance();
         while (is_digit(peek())) advance();
     }
     std::string num = content.substr(start, current - start);
 
-    add_token(TokenType::NUMBER, is_double ? std::stod(num) : std::stoi(num));
+    add_token(TokenType::NUMBER, std::stod(num));
 }
 
 

@@ -41,6 +41,7 @@ void Dio::run_prompt() {
         if (content == "q") break;
         run(content);
         had_error = false;
+        had_runtime_error = false;
     }
 }
 
@@ -59,11 +60,12 @@ void Dio::error(int line, int column, const std::string message) {
 void Dio::runtime_error(RuntimeError &error) {
     std::cout 
         << error.what() 
-        << "\n[line: " 
+        << "\n[riadok: " 
         << error.token.line 
-        << ", column: "
+        << ", stlpec: "
         << error.token.column
-        << "]";
+        << "]"
+        << '\n';
     had_runtime_error = true;
 }
 
