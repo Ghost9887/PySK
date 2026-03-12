@@ -14,3 +14,10 @@ LiteralValue Environment::get(Token name) {
     }
     throw RuntimeError(name, "Premena neexistuje.");
 }
+
+void Environment::assign(Token name, LiteralValue value) {
+    if (values.find(name.lexeme) == values.end()) {
+        throw RuntimeError(name, "Premena neexistuje.");
+    }
+    values.at(name.lexeme) = value;
+}

@@ -9,7 +9,6 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
     while (!is_at_end()) {
         statements.push_back(declaration());
     }
-
     return statements;
 }
 
@@ -52,6 +51,7 @@ std::shared_ptr<Stmnt> Parser::declaration() {
         return statement();
     }catch (ParseError error) {
         synchronize();
+        std::cout << "error" << '\n';
         return nullptr;
     }
 }
@@ -84,6 +84,23 @@ std::shared_ptr<Stmnt> Parser::expression_statement() {
     consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom.");
 
     return std::make_shared<Expression>(expr);
+}
+
+std::shared_ptr<Expr> Parser::assignment() {
+    std::shared_ptr<Expr> expr = equality();
+    if (match(TokenType::EQUAL)) {
+        Token equals = previous();
+        std::shared_ptr<Expr> value = assignment();
+
+        auto var = std::dynamic_pointer_cast<Variable>(expr);
+        if (var) {
+            return std::make_shared<Assign>(var->name, value);
+        }
+
+        error(equals, "Nelegalny zadany ciel.");
+    }
+
+    return expr;
 }
 
 std::shared_ptr<Expr> Parser::comparison() {
@@ -165,7 +182,7 @@ std::shared_ptr<Expr> Parser::equality() {
 }
 
 std::shared_ptr<Expr> Parser::expression() {
-    return equality();
+    return assignment();
 }
 
 template<typename... T>

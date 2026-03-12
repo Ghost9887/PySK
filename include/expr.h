@@ -3,6 +3,7 @@
 
 #include "token.h"
 
+class Assign;
 class Binary;
 class Grouping;
 class Literal;
@@ -16,6 +17,7 @@ public:
     //interface
     class ExprVisitor {
     public:
+        virtual LiteralValue visitAssignExpr(std::shared_ptr<Assign> expr) = 0;
         virtual LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) = 0;
         virtual LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) = 0;
         virtual LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) = 0;
@@ -67,6 +69,15 @@ public:
     Token name;
 public:
     Variable(Token name);
+    LiteralValue accept(ExprVisitor &visitor) override;
+};
+
+class Assign : public Expr, public std::enable_shared_from_this<Assign> {
+public:
+    Token name;
+    std::shared_ptr<Expr> value;
+public:
+    Assign(Token name, std::shared_ptr<Expr> value);
     LiteralValue accept(ExprVisitor &visitor) override;
 };
 

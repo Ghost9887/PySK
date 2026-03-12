@@ -16,6 +16,7 @@ public:
     LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
     LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
     LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;
+    LiteralValue visitAssignExpr(std::shared_ptr<Assign> expr) override;
     LiteralValue visitVariableExpr(std::shared_ptr<Variable> stmnt) override;
     LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) override;
     LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) override;

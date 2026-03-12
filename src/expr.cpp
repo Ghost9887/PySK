@@ -29,3 +29,9 @@ Variable::Variable(Token name)
 LiteralValue Variable::accept(ExprVisitor &visitor) {
     return visitor.visitVariableExpr(shared_from_this());
 }
+
+Assign::Assign(Token name, std::shared_ptr<Expr> value)
+    : name(name), value(value) {}
+LiteralValue Assign::accept(ExprVisitor &visitor) {
+    return visitor.visitAssignExpr(shared_from_this());
+}

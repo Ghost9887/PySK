@@ -32,6 +32,14 @@ LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
     return std::monostate();
 }
 
+LiteralValue Interpreter::visitAssignExpr(std::shared_ptr<Assign> expr) {
+    std::cout << "in visit" << '\n';
+    LiteralValue value = evaluate(expr->value);
+
+    env.assign(expr->name, value);
+    return value;
+}
+
 LiteralValue Interpreter::visitVariableExpr(std::shared_ptr<Variable> expr) {
     return env.get(expr->name);
 }
