@@ -22,6 +22,10 @@ LiteralValue Interpreter::visitLetStmnt(std::shared_ptr<Let> stmnt) {
 }
 
 LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt) {
+    if (!stmnt->expression) {
+        std::cout << "Error NULL Expression being passed in" << '\n';
+        exit(1);
+    }
     evaluate(stmnt->expression);
     return std::monostate();
 }
@@ -33,7 +37,6 @@ LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
 }
 
 LiteralValue Interpreter::visitAssignExpr(std::shared_ptr<Assign> expr) {
-    std::cout << "in visit" << '\n';
     LiteralValue value = evaluate(expr->value);
 
     env.assign(expr->name, value);

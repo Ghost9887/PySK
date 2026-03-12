@@ -1,6 +1,6 @@
 #include "stmnt.h"
 
-Expression::Expression(std::shared_ptr<Expr> expresssion) :
+Expression::Expression(std::shared_ptr<Expr> expression) :
     expression(expression) {}
 LiteralValue Expression::accept(StmntVisitor &visitor) {
     return visitor.visitExpressionStmnt(shared_from_this());   

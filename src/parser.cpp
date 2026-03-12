@@ -50,8 +50,8 @@ std::shared_ptr<Stmnt> Parser::declaration() {
         if (match(TokenType::LET)) return let_declaration();
         return statement();
     }catch (ParseError error) {
-        synchronize();
         std::cout << "error" << '\n';
+        synchronize();
         return nullptr;
     }
 }
