@@ -33,7 +33,7 @@ LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
             return std::get<double>(left) <= std::get<double>(right);
         case TokenType::BANG_EQUAL:
             return !is_equal(left, right);
-        case TokenType::EQUAL:
+        case TokenType::EQUAL_EQUAL:
             return is_equal(left, right);
         case TokenType::MINUS:
             check_number_operand(expr->op, left, right);
@@ -53,8 +53,16 @@ LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
             check_number_operand(expr->op, left, right);
             return std::get<double>(left) / std::get<double>(right);
         case TokenType::STAR:
-            check_number_operand(expr->op, left, right);
-            return std::get<double>(left) * std::get<double>(right);
+            if(std::holds_alternative<std::string>(left) && std::holds_alternative<double>(right)) {
+                std::string temp = "";
+                for (int i = 0; i < std::get<double>(right); i++) {
+                    temp += std::get<std::string>(left);
+                }
+                return temp;
+            }else {
+                check_number_operand(expr->op, left, right);
+                return std::get<double>(left) * std::get<double>(right);
+            }
     }
 
     return std::monostate();
@@ -100,7 +108,7 @@ bool Interpreter::is_equal(LiteralValue &right, LiteralValue &left) {
     if (std::holds_alternative<std::monostate>(right)) 
         return false;
 
-    return std::get<bool>(right) == std::get<bool>(left);
+    return std::get<double>(right) == std::get<double>(left);
 }
 
 void Interpreter::check_number_operand(Token &op, LiteralValue &right) {

@@ -142,9 +142,10 @@ void Scanner::string() {
         return;
     }
 
-    advance();
-    std::string value = content.substr(start + 1, current - start + 1);
+    
+    std::string value = content.substr(start + 1, current - (start + 1));
     add_token(TokenType::STRING, value);
+    advance();
 }
 
 bool Scanner::is_digit(const char c) {
