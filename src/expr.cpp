@@ -18,6 +18,12 @@ LiteralValue Literal::accept(ExprVisitor &visitor) {
     return visitor.visitLiteralExpr(shared_from_this());
 }
 
+Logical::Logical(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right) :
+    left(left), op(op), right(right) {}
+LiteralValue Logical::accept(ExprVisitor &visitor) {
+    return visitor.visitLogicalExpr(shared_from_this());
+}
+
 Unary::Unary(Token op, std::shared_ptr<Expr> right) 
     : op(op), right(right) {}
 LiteralValue Unary::accept(ExprVisitor &visitor) {

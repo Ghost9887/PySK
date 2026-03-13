@@ -29,3 +29,9 @@ Let::Let(Token name, std::shared_ptr<Expr> initializer) :
 LiteralValue Let::accept(StmntVisitor &visitor) {
     return visitor.visitLetStmnt(shared_from_this());
 }
+
+While::While(std::shared_ptr<Expr> condition, std::shared_ptr<Stmnt> body) :
+    condition(condition), body(body) {}
+LiteralValue While::accept(StmntVisitor &visitor) {
+    return visitor.visitWhileStmnt(shared_from_this());
+}

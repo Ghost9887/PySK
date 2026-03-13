@@ -67,11 +67,63 @@ std::shared_ptr<Stmnt> Parser::let_declaration() {
 }
 
 std::shared_ptr<Stmnt> Parser::statement() {
+    if (match(TokenType::PRE)) return for_statement();
     if (match(TokenType::AK)) return if_statement();
     if (match(TokenType::VYTLAC)) return print_statement();
+    if (match(TokenType::POKIAL)) return while_statement();
     if (match(TokenType::L_BRACE)) return std::make_shared<Block>(block());
 
     return expression_statement();
+}
+
+std::shared_ptr<Stmnt> Parser::for_statement() {
+    consume(TokenType::L_PAREN, "Ocakavany '(' za pre.");
+
+    std::shared_ptr<Stmnt> initializer;
+    if (match(TokenType::SEMICOLON)) {
+        initializer = nullptr;
+    }else if (match(TokenType::LET)) {
+        initializer = let_declaration();
+    }else {
+        initializer = expression_statement();
+    }
+
+    std::shared_ptr<Expr> condition = nullptr;
+    if (!check(SEMICOLON)) {
+        condition = expression();
+    }
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za sluckou.");
+    
+    std::shared_ptr<Expr> increment = nullptr;
+    if (!check(TokenType::R_PAREN)) {
+        increment = expression();
+    }
+    consume(TokenType::R_PAREN, "Ocakavany ')' za pre.");
+
+    std::shared_ptr<Stmnt> body = statement();
+
+    if (increment != nullptr) { 
+        body = std::make_shared<Block>(
+            std::vector<std::shared_ptr<Stmnt>> {
+                body,
+                std::make_shared<Expression>(increment)
+            }
+        );
+    }
+
+    if (condition == nullptr) condition = std::make_shared<Literal>(true);
+    body = std::make_shared<While>(condition, body);
+
+    if (initializer != nullptr) {
+        body = std::make_shared<Block>(
+            std::vector<std::shared_ptr<Stmnt>> {
+                initializer,
+                body
+            }
+        );
+    }
+
+    return body;
 }
 
 std::shared_ptr<Stmnt> Parser::if_statement(){
@@ -95,6 +147,15 @@ std::shared_ptr<Stmnt> Parser::print_statement() {
     return std::make_shared<Print>(expr);
 }
 
+std::shared_ptr<Stmnt> Parser::while_statement() {
+    consume(TokenType::L_PAREN, "Ocakavany '(' za 'pokial'.");
+    std::shared_ptr<Expr> condition = expression(); 
+    consume(TokenType::R_PAREN, "Ocakavany ')' na konci pokial.");
+    std::shared_ptr<Stmnt> body = statement();
+
+    return std::make_shared<While>(condition, body);
+}
+
 std::vector<std::shared_ptr<Stmnt>> Parser::block() {
     std::vector<std::shared_ptr<Stmnt>> statements;
 
@@ -114,7 +175,8 @@ std::shared_ptr<Stmnt> Parser::expression_statement() {
 }
 
 std::shared_ptr<Expr> Parser::assignment() {
-    std::shared_ptr<Expr> expr = equality();
+    std::shared_ptr<Expr> expr = _or();
+
     if (match(TokenType::EQUAL)) {
         Token equals = previous();
         std::shared_ptr<Expr> value = assignment();
@@ -125,6 +187,30 @@ std::shared_ptr<Expr> Parser::assignment() {
         }
 
         error(equals, "Nelegalny zadany ciel.");
+    }
+
+    return expr;
+}
+
+std::shared_ptr<Expr> Parser::_or() {
+    std::shared_ptr<Expr> expr = _and();
+
+    while (match(TokenType::ALEBO)) {
+        Token op = previous();
+        std::shared_ptr<Expr> right = _and();
+        expr = std::make_shared<Logical>(expr, op, right);
+    }
+
+    return expr;
+}
+
+std::shared_ptr<Expr> Parser::_and() {
+    std::shared_ptr<Expr> expr = equality();
+
+    while (match(TokenType::A)) {
+        Token op = previous();
+        std::shared_ptr<Expr> right = equality();
+        expr = std::make_shared<Logical>(expr, op, right);
     }
 
     return expr;

@@ -9,6 +9,7 @@ class If;
 class Expression;
 class Print;
 class Let;
+class While;
 
 //abstract base class
 class Stmnt {
@@ -22,6 +23,7 @@ public:
         virtual LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) = 0;
         virtual LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) = 0;
         virtual LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) = 0;
+        virtual LiteralValue visitWhileStmnt(std::shared_ptr<While> stmnt) = 0;
         virtual ~StmntVisitor() = default;
     };
 
@@ -35,7 +37,6 @@ public:
     Block(std::vector<std::shared_ptr<Stmnt>> statements);
     LiteralValue accept(StmntVisitor &visitor) override;
 };
-
 
 class If : public Stmnt, public std::enable_shared_from_this<If> {
 public:
@@ -69,6 +70,15 @@ public:
     std::shared_ptr<Expr> initializer;
 public:
     Let(Token name, std::shared_ptr<Expr> initializer);
+    LiteralValue accept(StmntVisitor &visitor) override;
+};
+
+class While : public Stmnt, public std::enable_shared_from_this<While> {
+public:
+    std::shared_ptr<Expr> condition;
+    std::shared_ptr<Stmnt> body;
+public:
+    While(std::shared_ptr<Expr> condition, std::shared_ptr<Stmnt> body);
     LiteralValue accept(StmntVisitor &visitor) override;
 };
 

@@ -9,8 +9,10 @@ Environment::Environment(std::shared_ptr<Environment> environment) :
 void Environment::define(Token &name, LiteralValue value) {
     if (values.find(name.lexeme) != values.end()) {
         throw RuntimeError(name, "Premena uz existuje.");
-    }else if (enclosing) {
-        enclosing->get(name);
+    }
+
+    if (enclosing && enclosing->exists(name.lexeme)) {
+        throw RuntimeError(name, "Premena uz existuje.");
     }
 
     values.emplace(name.lexeme, value);
@@ -36,4 +38,10 @@ void Environment::assign(Token &name, LiteralValue value) {
     }else {
         values.at(name.lexeme) = value;
     }
+}
+
+bool Environment::exists(const std::string& name) {
+    if (values.find(name) != values.end()) return true;
+    if (enclosing) return enclosing->exists(name);
+    return false;
 }

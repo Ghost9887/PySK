@@ -51,11 +51,31 @@ LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
     return std::monostate();
 }
 
+LiteralValue Interpreter::visitWhileStmnt(std::shared_ptr<While> stmnt) {
+    while (is_truthy(evaluate(stmnt->condition))) {
+        execute(stmnt->body);
+    }
+
+    return std::monostate();
+}
+
 LiteralValue Interpreter::visitAssignExpr(std::shared_ptr<Assign> expr) {
     LiteralValue value = evaluate(expr->value);
 
     env->assign(expr->name, value);
     return value;
+}
+
+LiteralValue Interpreter::visitLogicalExpr(std::shared_ptr<Logical> expr) {
+    LiteralValue left = evaluate(expr->left);
+
+    if (expr->op.type == TokenType::ALEBO) {
+        if (is_truthy(left)) return left;
+    }else {
+        if (!is_truthy(left)) return left;
+    }
+
+    return evaluate(expr->right);
 }
 
 LiteralValue Interpreter::visitVariableExpr(std::shared_ptr<Variable> expr) {
@@ -151,14 +171,20 @@ void Interpreter::execute_block(std::vector<std::shared_ptr<Stmnt>> statements,
 
     std::shared_ptr<Environment> previous = env; 
     
-    env = environment;
-    for (int i = 0; i < statements.size(); i++) {
-        execute(statements.at(i));
+    try {
+        env = environment;
+        for(std::shared_ptr<Stmnt> statement : statements){
+            execute(statement);
+        }
+    }
+    catch(...) {
+        env = previous;
+        throw;
     }
     env = previous;
 }
 
-bool Interpreter::is_truthy(LiteralValue &literal) {
+bool Interpreter::is_truthy(const LiteralValue &literal) {
     if (std::holds_alternative<std::monostate>(literal)) 
         return false;
 

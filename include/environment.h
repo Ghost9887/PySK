@@ -14,6 +14,8 @@ public:
 public:
     std::unordered_map<std::string, LiteralValue> values;
     std::shared_ptr<Environment> enclosing;
+public:
+    bool exists(const std::string& name);
 };
 
 #endif

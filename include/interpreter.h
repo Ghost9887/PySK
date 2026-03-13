@@ -16,12 +16,14 @@ public:
     LiteralValue visitBlockStmnt(std::shared_ptr<Block> stmnt) override;
     LiteralValue visitIfStmnt(std::shared_ptr<If> stmnt) override;
     LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
+    LiteralValue visitWhileStmnt(std::shared_ptr<While> stmnt) override;
     LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
     LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;
 
     LiteralValue visitAssignExpr(std::shared_ptr<Assign> expr) override;
     LiteralValue visitVariableExpr(std::shared_ptr<Variable> expr) override;
     LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) override;
+    LiteralValue visitLogicalExpr(std::shared_ptr<Logical> expr) override;
     LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) override;
     LiteralValue visitUnaryExpr(std::shared_ptr<Unary> expr) override;
     LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
@@ -32,7 +34,7 @@ private:
     LiteralValue evaluate(std::shared_ptr<Expr> expr);
     void execute_block(std::vector<std::shared_ptr<Stmnt>> statements, std::shared_ptr<Environment> environment);
     void execute(std::shared_ptr<Stmnt> stmnt);
-    bool is_truthy(LiteralValue &literal);
+    bool is_truthy(const LiteralValue &literal);
     bool is_equal(LiteralValue &right, LiteralValue &left);
     void check_number_operand(Token &op, LiteralValue &right);
     void check_number_operand(Token &op, LiteralValue &left, LiteralValue &right);
