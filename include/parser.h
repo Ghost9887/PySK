@@ -25,6 +25,7 @@ private:
     std::shared_ptr<Stmnt> statement(); 
     std::shared_ptr<Stmnt> print_statement();
     std::shared_ptr<Stmnt> expression_statement();
+    std::shared_ptr<Stmnt> if_statement();
     std::shared_ptr<Expr> assignment();
     std::shared_ptr<Expr> expression();
     std::shared_ptr<Expr> equality();

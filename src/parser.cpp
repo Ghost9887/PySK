@@ -67,10 +67,32 @@ std::shared_ptr<Stmnt> Parser::let_declaration() {
 }
 
 std::shared_ptr<Stmnt> Parser::statement() {
+    if (match(TokenType::AK)) return if_statement();
     if (match(TokenType::VYTLAC)) return print_statement();
     if (match(TokenType::L_BRACE)) return std::make_shared<Block>(block());
 
     return expression_statement();
+}
+
+std::shared_ptr<Stmnt> Parser::if_statement(){
+    consume(TokenType::L_PAREN, "Ocakavany '(' za 'ked'.");
+    std::shared_ptr<Expr> condition = expression();
+    consume(TokenType::R_PAREN, "Ocakavany ')' na konci 'ked'.");
+
+    std::shared_ptr<Stmnt> then_branch = statement();
+    std::optional<std::shared_ptr<Stmnt>> else_branch = std::nullopt;
+    if (match(TokenType::INAK)) {
+        else_branch = statement();
+    }
+
+    return std::make_shared<If>(condition, then_branch, else_branch);
+}
+
+std::shared_ptr<Stmnt> Parser::print_statement() {
+    std::shared_ptr<Expr> expr = expression();
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom.");
+
+    return std::make_shared<Print>(expr);
 }
 
 std::vector<std::shared_ptr<Stmnt>> Parser::block() {
@@ -82,13 +104,6 @@ std::vector<std::shared_ptr<Stmnt>> Parser::block() {
 
     consume(TokenType::R_BRACE, "Ocakavany '}' za blokom");
     return statements;
-}
-
-std::shared_ptr<Stmnt> Parser::print_statement() {
-    std::shared_ptr<Expr> expr = expression();
-    consume(TokenType::SEMICOLON, "Ocakavany ';' za vyrazom.");
-
-    return std::make_shared<Print>(expr);
 }
 
 std::shared_ptr<Stmnt> Parser::expression_statement() {

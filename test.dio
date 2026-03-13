@@ -1,19 +1,5 @@
-let a = "global a";
-let b = "global b";
-let c = "global c";
-{
-    let a = "outer a";
-    let b = "outer b";
-    {
-        let a = "inner a";
-        vytlac a;
-        vytlac b;
-        vytlac c;
-    }
-    vytlac a;
-    vytlac b;
-    vytlac c;
-}
-vytlac a;
-vytlac b;
-vytlac c;
+let a = 5;
+let b = 5;
+
+ak (a > b) vytlac pravda;
+inak vytlac nepravda;

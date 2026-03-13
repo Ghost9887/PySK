@@ -14,6 +14,7 @@ public:
     Interpreter() = default;
     ~Interpreter() = default;
     LiteralValue visitBlockStmnt(std::shared_ptr<Block> stmnt) override;
+    LiteralValue visitIfStmnt(std::shared_ptr<If> stmnt) override;
     LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
     LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
     LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;

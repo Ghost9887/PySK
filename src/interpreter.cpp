@@ -26,6 +26,16 @@ LiteralValue Interpreter::visitBlockStmnt(std::shared_ptr<Block> stmnt) {
     return std::monostate();
 }
 
+LiteralValue Interpreter::visitIfStmnt(std::shared_ptr<If> stmnt) {
+    LiteralValue value = evaluate(stmnt->condition);
+    if (is_truthy(value)) { 
+        execute(stmnt->then_branch);
+    } else if (stmnt->else_branch.has_value()) {
+        execute(stmnt->else_branch.value());
+    }
+    return std::monostate();
+}
+
 LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt) {
     if (!stmnt->expression) {
         std::cout << "Error NULL Expression being passed in" << '\n';

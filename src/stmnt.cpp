@@ -6,6 +6,11 @@ LiteralValue Block::accept(StmntVisitor &visitor) {
     return visitor.visitBlockStmnt(shared_from_this());
 }
 
+If::If(std::shared_ptr<Expr> condition, std::shared_ptr<Stmnt> then_branch, std::optional<std::shared_ptr<Stmnt>> else_branch) :
+    condition(condition), then_branch(then_branch), else_branch(else_branch) {}
+LiteralValue If::accept(StmntVisitor &visitor) {
+    return visitor.visitIfStmnt(shared_from_this());
+}
 
 Expression::Expression(std::shared_ptr<Expr> expression) :
     expression(expression) {}
