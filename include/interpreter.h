@@ -13,9 +13,11 @@ class Interpreter : public Expr::ExprVisitor, public Stmnt::StmntVisitor,
 public:
     Interpreter() = default;
     ~Interpreter() = default;
+    LiteralValue visitBlockStmnt(std::shared_ptr<Block> stmnt) override;
     LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
     LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
     LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;
+
     LiteralValue visitAssignExpr(std::shared_ptr<Assign> expr) override;
     LiteralValue visitVariableExpr(std::shared_ptr<Variable> expr) override;
     LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) override;
@@ -24,9 +26,10 @@ public:
     LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) override;
     void interpret(std::vector<std::shared_ptr<Stmnt>> statements);
 private:
-    Environment env;
+    std::shared_ptr<Environment> env = std::make_shared<Environment>();
 private:
     LiteralValue evaluate(std::shared_ptr<Expr> expr);
+    void execute_block(std::vector<std::shared_ptr<Stmnt>> statements, std::shared_ptr<Environment> environment);
     void execute(std::shared_ptr<Stmnt> stmnt);
     bool is_truthy(LiteralValue &literal);
     bool is_equal(LiteralValue &right, LiteralValue &left);

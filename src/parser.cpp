@@ -68,8 +68,20 @@ std::shared_ptr<Stmnt> Parser::let_declaration() {
 
 std::shared_ptr<Stmnt> Parser::statement() {
     if (match(TokenType::VYTLAC)) return print_statement();
+    if (match(TokenType::L_BRACE)) return std::make_shared<Block>(block());
 
     return expression_statement();
+}
+
+std::vector<std::shared_ptr<Stmnt>> Parser::block() {
+    std::vector<std::shared_ptr<Stmnt>> statements;
+
+    while (!check(TokenType::R_BRACE) && !is_at_end()) {
+        statements.push_back(declaration());
+    }
+
+    consume(TokenType::R_BRACE, "Ocakavany '}' za blokom");
+    return statements;
 }
 
 std::shared_ptr<Stmnt> Parser::print_statement() {

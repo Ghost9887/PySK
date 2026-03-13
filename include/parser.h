@@ -19,6 +19,7 @@ private:
     std::vector<Token> tokens;
     int current;
 private:
+    std::vector<std::shared_ptr<Stmnt>> block(); 
     std::shared_ptr<Stmnt> let_declaration();
     std::shared_ptr<Stmnt> declaration();
     std::shared_ptr<Stmnt> statement(); 

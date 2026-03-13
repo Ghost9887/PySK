@@ -4,6 +4,7 @@
 #include "token.h"
 #include "expr.h"
 
+class Block;
 class Expression;
 class Print;
 class Let;
@@ -15,6 +16,7 @@ public:
     //interface
     class StmntVisitor {
     public:
+        virtual LiteralValue visitBlockStmnt(std::shared_ptr<Block> stmnt) = 0;
         virtual LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) = 0;
         virtual LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) = 0;
         virtual LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) = 0;
@@ -23,6 +25,15 @@ public:
 
     virtual LiteralValue accept(StmntVisitor &visitor) = 0;
 };
+
+class Block : public Stmnt, public std::enable_shared_from_this<Block> {
+public:
+    std::vector<std::shared_ptr<Stmnt>> statements;
+public:
+    Block(std::vector<std::shared_ptr<Stmnt>> statements);
+    LiteralValue accept(StmntVisitor &visitor) override;
+};
+
 
 class Expression : public Stmnt, public std::enable_shared_from_this<Expression> {
 public:

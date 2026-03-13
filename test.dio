@@ -1,3 +1,19 @@
-let a = 5;
-a = 10;
+let a = "global a";
+let b = "global b";
+let c = "global c";
+{
+    let a = "outer a";
+    let b = "outer b";
+    {
+        let a = "inner a";
+        vytlac a;
+        vytlac b;
+        vytlac c;
+    }
+    vytlac a;
+    vytlac b;
+    vytlac c;
+}
 vytlac a;
+vytlac b;
+vytlac c;

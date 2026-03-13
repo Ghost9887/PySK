@@ -17,7 +17,12 @@ LiteralValue Interpreter::visitLetStmnt(std::shared_ptr<Let> stmnt) {
         value = evaluate(stmnt->initializer);
     }
 
-    env.define(stmnt->name, value);
+    env->define(stmnt->name, value);
+    return std::monostate();
+}
+
+LiteralValue Interpreter::visitBlockStmnt(std::shared_ptr<Block> stmnt) {
+    execute_block(stmnt->statements, std::make_shared<Environment>(env));
     return std::monostate();
 }
 
@@ -39,12 +44,12 @@ LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
 LiteralValue Interpreter::visitAssignExpr(std::shared_ptr<Assign> expr) {
     LiteralValue value = evaluate(expr->value);
 
-    env.assign(expr->name, value);
+    env->assign(expr->name, value);
     return value;
 }
 
 LiteralValue Interpreter::visitVariableExpr(std::shared_ptr<Variable> expr) {
-    return env.get(expr->name);
+    return env->get(expr->name);
 }
 
 LiteralValue Interpreter::visitLiteralExpr(std::shared_ptr<Literal> expr) {
@@ -129,6 +134,18 @@ LiteralValue Interpreter::evaluate(std::shared_ptr<Expr> expr) {
 
 void Interpreter::execute(std::shared_ptr<Stmnt> stmnt) {
     stmnt->accept(*this);
+}
+
+void Interpreter::execute_block(std::vector<std::shared_ptr<Stmnt>> statements, 
+        std::shared_ptr<Environment> environment) {
+
+    std::shared_ptr<Environment> previous = env; 
+    
+    env = environment;
+    for (int i = 0; i < statements.size(); i++) {
+        execute(statements.at(i));
+    }
+    env = previous;
 }
 
 bool Interpreter::is_truthy(LiteralValue &literal) {

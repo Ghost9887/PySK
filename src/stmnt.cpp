@@ -1,5 +1,12 @@
 #include "stmnt.h"
 
+Block::Block(std::vector<std::shared_ptr<Stmnt>> statements) :
+    statements(statements) {}
+LiteralValue Block::accept(StmntVisitor &visitor) {
+    return visitor.visitBlockStmnt(shared_from_this());
+}
+
+
 Expression::Expression(std::shared_ptr<Expr> expression) :
     expression(expression) {}
 LiteralValue Expression::accept(StmntVisitor &visitor) {
