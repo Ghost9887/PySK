@@ -1,9 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "expr.h"
 #include "stmnt.h"
 #include "dio.h"
+
+#define MAX_FUNCTION_ARGUMENTS 255
 
 class ParseError : public std::runtime_error {
 public:
@@ -26,8 +27,10 @@ private:
     std::shared_ptr<Stmnt> print_statement();
     std::shared_ptr<Stmnt> expression_statement();
     std::shared_ptr<Stmnt> if_statement();
+    std::shared_ptr<Stmnt> function(std::string kind);
     std::shared_ptr<Stmnt> for_statement();
     std::shared_ptr<Stmnt> while_statement();
+
     std::shared_ptr<Expr> assignment();
     std::shared_ptr<Expr> _or();
     std::shared_ptr<Expr> _and();
@@ -37,6 +40,8 @@ private:
     std::shared_ptr<Expr> term();
     std::shared_ptr<Expr> factor();
     std::shared_ptr<Expr> unary();
+    std::shared_ptr<Expr> call();
+    std::shared_ptr<Expr> finish_call(std::shared_ptr<Expr> callee);
     std::shared_ptr<Expr> primary();
     ParseError error(Token &token, std::string message);
     void synchronize();

@@ -6,6 +6,12 @@ LiteralValue Binary::accept(ExprVisitor &visitor) {
         return visitor.visitBinaryExpr(shared_from_this());
 }
 
+Call::Call(std::shared_ptr<Expr> callee, Token paren, std::vector<std::shared_ptr<Expr>> arguments)
+    : callee(callee), paren(paren), arguments(arguments) {}
+LiteralValue Call::accept(ExprVisitor &visitor) {
+    return visitor.visitCallExpr(shared_from_this());
+}
+
 Grouping::Grouping(std::shared_ptr<Expr> expression) 
     : expression(expression) {}
 LiteralValue Grouping::accept(ExprVisitor &visitor) {

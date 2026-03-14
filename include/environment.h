@@ -1,6 +1,7 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#include <memory>
 #include "runtime_error.h"
 
 class Environment {

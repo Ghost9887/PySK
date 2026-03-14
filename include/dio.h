@@ -1,10 +1,16 @@
 #ifndef DIO_H
 #define DIO_H
 
+#include <string>
+#include <vector>
+#include <memory>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+
 #include "scanner.h"
-#include "ast_printer.h"
-#include "parser.h"
 #include "interpreter.h"
+#include "parser.h"
 
 class Dio {
 public:

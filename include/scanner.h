@@ -1,8 +1,10 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
+#include <vector>
 #include "token.h"
-#include "dio.h"
+
+class Dio;
 
 class Scanner {
 public:

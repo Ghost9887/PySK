@@ -1,6 +1,28 @@
 #include "interpreter.h"
 #include "dio.h"
 
+LiteralValue NativeClock::call(Interpreter &interpreter, std::vector<LiteralValue> arguments) {
+    auto ticks = std::chrono::system_clock::now().time_since_epoch();
+    return std::chrono::duration<double>(ticks).count() / 1000.0;
+}
+
+int NativeClock::arity() {
+    return 0;
+}
+
+std::string NativeClock::to_string() {
+    return "<native fn>";
+}
+
+Interpreter::Interpreter() 
+    : env(nullptr), globals(nullptr) 
+{
+    globals = std::make_shared<Environment>();
+    Token token(TokenType::IDENTIFIER, "hodiny", "hodiny", 0, 0);
+    globals->define(token, std::shared_ptr<NativeClock>());
+    env = globals;
+}
+
 void Interpreter::interpret(std::vector<std::shared_ptr<Stmnt>> statements) {
     try {
         for (int i = 0; i < statements.size(); i++) {
@@ -42,6 +64,13 @@ LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt
         exit(1);
     }
     evaluate(stmnt->expression);
+    return std::monostate();
+}
+
+LiteralValue Interpreter::visitFunctionStmnt(std::shared_ptr<Function> stmnt) {
+    std::shared_ptr<DioFunction> function = std::make_shared<DioFunction>(stmnt);
+    env->define(stmnt->name, function);
+
     return std::monostate();
 }
 
@@ -140,6 +169,27 @@ LiteralValue Interpreter::visitBinaryExpr(std::shared_ptr<Binary> expr) {
     return std::monostate();
 }
 
+LiteralValue Interpreter::visitCallExpr(std::shared_ptr<Call> expr) {
+    LiteralValue callee = evaluate(expr->callee);
+
+    std::vector<LiteralValue> arguments;
+    for (std::shared_ptr<Expr> arg : expr->arguments) {
+        arguments.push_back(evaluate(arg));
+    }
+
+    if (!std::holds_alternative<std::shared_ptr<DioCallable>>(callee)) {
+        throw RuntimeError(expr->paren, "Iba funkcie a triedy mozu byt volane.");
+    }
+
+    std::shared_ptr<DioCallable> function = std::get<std::shared_ptr<DioCallable>>(callee);
+    
+    if (arguments.size() != function->arity()) {
+        throw RuntimeError(expr->paren, "Ocakvany " + std::to_string(function->arity()) + "pocet argumentov ale je " + std::to_string(arguments.size()) + ".");
+    }
+
+    return function->call(*this, arguments);
+}
+
 LiteralValue Interpreter::visitUnaryExpr(std::shared_ptr<Unary> expr) {
     LiteralValue right = evaluate(expr->right);
 
@@ -194,7 +244,7 @@ bool Interpreter::is_truthy(const LiteralValue &literal) {
     return true;
 }
 
-bool Interpreter::is_equal(LiteralValue &right, LiteralValue &left) {
+bool Interpreter::is_equal(const LiteralValue &right, const LiteralValue &left) {
     if (std::holds_alternative<std::monostate>(right) 
         && std::holds_alternative<std::monostate>(left)) 
         return true;
@@ -205,12 +255,12 @@ bool Interpreter::is_equal(LiteralValue &right, LiteralValue &left) {
     return std::get<double>(right) == std::get<double>(left);
 }
 
-void Interpreter::check_number_operand(Token &op, LiteralValue &right) {
+void Interpreter::check_number_operand(Token &op, const LiteralValue &right) {
     if (std::holds_alternative<double>(right)) return;
     throw RuntimeError(op, "vyraz musi byt zlozeni s cisel");
 }
 
-void Interpreter::check_number_operand(Token &op, LiteralValue &left, LiteralValue &right) {
+void Interpreter::check_number_operand(Token &op, const LiteralValue &left, const LiteralValue &right) {
     if (std::holds_alternative<double>(right) && std::holds_alternative<double>(left))
         return;
     

@@ -12,6 +12,12 @@ LiteralValue If::accept(StmntVisitor &visitor) {
     return visitor.visitIfStmnt(shared_from_this());
 }
 
+Function::Function(Token name, std::vector<Token> params, std::vector<std::shared_ptr<Stmnt>> body) :
+    name(name), params(params), body(body) {}
+LiteralValue Function::accept(StmntVisitor &visitor) {
+    return visitor.visitFunctionStmnt(shared_from_this());
+}
+
 Expression::Expression(std::shared_ptr<Expr> expression) :
     expression(expression) {}
 LiteralValue Expression::accept(StmntVisitor &visitor) {

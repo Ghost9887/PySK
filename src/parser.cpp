@@ -47,6 +47,7 @@ ParseError Parser::error(Token &token, std::string message) {
 
 std::shared_ptr<Stmnt> Parser::declaration() {
     try {
+        if (match(TokenType::FUNK)) return function("function");
         if (match(TokenType::LET)) return let_declaration();
         return statement();
     }catch (ParseError error) {
@@ -54,6 +55,27 @@ std::shared_ptr<Stmnt> Parser::declaration() {
         synchronize();
         return nullptr;
     }
+}
+
+std::shared_ptr<Stmnt> Parser::function(std::string kind) {
+    Token name = consume(TokenType::IDENTIFIER, "Ocakavany " + kind + " meno.");
+
+    consume(TokenType::L_PAREN, "Ocakavany '(' za " + kind + " menom.");
+    std::vector<Token> paramaters;
+    if (!check(TokenType::R_PAREN)) {
+        do {
+            if (paramaters.size() >= MAX_FUNCTION_ARGUMENTS) {
+                error(peek(), "Maximalny pocet agrumentou je " + std::to_string(MAX_FUNCTION_ARGUMENTS) + ".");
+            }
+
+            paramaters.push_back(consume(TokenType::IDENTIFIER, "Ocakavane meno argumentu."));
+        }while (match(TokenType::COMMA));
+    }
+    consume(TokenType::R_PAREN, "Ocakavany ')' za argumentami.");
+
+    consume(TokenType::L_BRACE, "Ocakavany '{' pred " + kind + "telom.");
+    std::vector<std::shared_ptr<Stmnt>> body = block();
+    return std::make_shared<Function>(name, paramaters, body);
 }
 
 std::shared_ptr<Stmnt> Parser::let_declaration() {
@@ -255,7 +277,36 @@ std::shared_ptr<Expr> Parser::unary() {
         return std::make_shared<Unary>(op, right);
     }
 
-    return primary();
+    return call();
+}
+
+std::shared_ptr<Expr> Parser::call() {
+    std::shared_ptr<Expr> expr = primary();
+
+    while (true) {
+        if (match(TokenType::L_PAREN)) {
+            expr = finish_call(expr);
+        }else break;
+    } 
+
+    return expr;
+}
+
+std::shared_ptr<Expr> Parser::finish_call(std::shared_ptr<Expr> callee) {
+    std::vector<std::shared_ptr<Expr>> arguments;
+
+    if (!check(TokenType::R_PAREN)) {
+        do {
+            if (arguments.size() >= MAX_FUNCTION_ARGUMENTS) {
+                error(peek(), "Maximalny pocet argumentou je " + std::to_string(MAX_FUNCTION_ARGUMENTS) + ".");
+            }
+            arguments.push_back(expression());
+        }while (match(TokenType::COMMA));
+    }
+
+    Token paren = consume(TokenType::R_PAREN, "Ocakavany ')' za argumentami");
+
+    return std::make_shared<Call>(callee, paren, arguments);
 }
 
 std::shared_ptr<Expr> Parser::factor() {

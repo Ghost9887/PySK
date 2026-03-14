@@ -1,11 +1,14 @@
 #ifndef STMNT_H
 #define STMNT_H
 
+#include <optional>
+
 #include "token.h"
 #include "expr.h"
 
 class Block;
 class If;
+class Function;
 class Expression;
 class Print;
 class Let;
@@ -20,6 +23,7 @@ public:
     public:
         virtual LiteralValue visitBlockStmnt(std::shared_ptr<Block> stmnt) = 0;
         virtual LiteralValue visitIfStmnt(std::shared_ptr<If> stmnt) = 0;
+        virtual LiteralValue visitFunctionStmnt(std::shared_ptr<Function> stmnt) = 0;
         virtual LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) = 0;
         virtual LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) = 0;
         virtual LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) = 0;
@@ -45,6 +49,16 @@ public:
     std::optional<std::shared_ptr<Stmnt>> else_branch;
 public:
     If(std::shared_ptr<Expr> condition, std::shared_ptr<Stmnt> then_branch, std::optional<std::shared_ptr<Stmnt>> else_branch);
+    LiteralValue accept(StmntVisitor &visitor) override;
+};
+
+class Function : public Stmnt, public std::enable_shared_from_this<Function> {
+public:
+    Token name;
+    std::vector<Token> params;
+    std::vector<std::shared_ptr<Stmnt>> body;
+public:
+    Function(Token name, std::vector<Token> params, std::vector<std::shared_ptr<Stmnt>> body);
     LiteralValue accept(StmntVisitor &visitor) override;
 };
 

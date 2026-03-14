@@ -1,10 +1,14 @@
 #ifndef EXPR_HPP
 #define EXPR_HPP
 
+#include <vector>
+
 #include "token.h"
+
 
 class Assign;
 class Binary;
+class Call;
 class Grouping;
 class Literal;
 class Logical;
@@ -20,6 +24,7 @@ public:
     public:
         virtual LiteralValue visitAssignExpr(std::shared_ptr<Assign> expr) = 0;
         virtual LiteralValue visitBinaryExpr(std::shared_ptr<Binary> expr) = 0;
+        virtual LiteralValue visitCallExpr(std::shared_ptr<Call> expr) = 0;
         virtual LiteralValue visitGroupingExpr(std::shared_ptr<Grouping> expr) = 0;
         virtual LiteralValue visitLiteralExpr(std::shared_ptr<Literal> expr) = 0;
         virtual LiteralValue visitLogicalExpr(std::shared_ptr<Logical> expr) = 0;
@@ -38,6 +43,16 @@ public:
     std::shared_ptr<Expr> right;
 public:
     Binary(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
+    LiteralValue accept(ExprVisitor &visitor) override;
+};
+
+class Call : public Expr, public std::enable_shared_from_this<Call> {
+public:
+    std::shared_ptr<Expr> callee;
+    Token paren;
+    std::vector<std::shared_ptr<Expr>> arguments;
+public:
+    Call(std::shared_ptr<Expr> callee, Token paren, std::vector<std::shared_ptr<Expr>> arguments);
     LiteralValue accept(ExprVisitor &visitor) override;
 };
 

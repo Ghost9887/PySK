@@ -1,4 +1,5 @@
 #include "scanner.h"
+#include "dio.h"
 
 Scanner::Scanner(std::string content) :
     content(content), tokens(), start(0), current(0), line(1) {}
