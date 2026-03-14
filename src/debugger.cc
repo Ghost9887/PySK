@@ -8,6 +8,14 @@ void Debugger::disassemble_chunk(const Chunk &chunk, std::string name) {
     }
 }
 
+int Debugger::constant_instruction(std::string name, const Chunk &chunk, int offset) {
+    Byte constant = chunk.code.at(offset + 1);
+    std::cout << name << constant << " '";
+    chunk.constants->print_value(chunk.constants->values.at(constant));
+    std::cout << "'\n";
+    return offset + 2;
+}
+
 int Debugger::simple_instruction(std::string name, int offset) {
     std::cout << name <<'\n';
     return ++offset;
@@ -16,10 +24,18 @@ int Debugger::simple_instruction(std::string name, int offset) {
 int Debugger::disassemble_instruction(const Chunk &chunk, int offset) {
     std::cout << std::setw(4) << std::setfill('0') << offset << " ";
 
+    if (offset > 0 && chunk.lines.at(offset) == chunk.lines.at(offset - 1)) {
+        std::cout << "  | ";
+    }else {
+        std::cout << chunk.lines.at(offset) << " ";
+    }
+
     Byte instruction = chunk.code.at(offset);
     switch (instruction) {
         case OP_RETURN:
             return Debugger::simple_instruction("OP_RETURN", offset);
+        case OP_CONSTANT:
+            return Debugger::constant_instruction("OP_CONSTANT", chunk, offset);
         default: 
             std::cout << "Uknown opcode " << instruction;
             return ++offset;

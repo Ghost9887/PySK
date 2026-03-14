@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "chunk.h"
+#include "value.h"
 
 class Debugger {
 public:
@@ -12,6 +13,7 @@ public:
     int disassemble_instruction(const Chunk &chunk, int offset);
 private:
     static int simple_instruction(std::string name, int offset); 
+    static int constant_instruction(std::string name, const Chunk &chunk, int offset);
 };
 
 #endif
