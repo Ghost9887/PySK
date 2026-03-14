@@ -15,7 +15,7 @@ public:
     Chunk();
     ~Chunk() = default;
     void write_chunk(Byte byte, int line);
-    int add_constant(Value value);
+    void write_constant(Value value, int line);
 public:
     std::vector<Byte> code;
     std::unique_ptr<Values> constants;

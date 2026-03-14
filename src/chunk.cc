@@ -17,7 +17,14 @@ void Chunk::write_chunk(Byte byte, int line) {
     }
 }
 
-int Chunk::add_constant(Value value) {
+//TODO: add a way to store more bytes
+void Chunk::write_constant(Value value, int line) {
     constants->write_value(value);
-    return constants->values.size() - 1;
+    int index = constants->values.size() - 1;
+
+    if (index <= 256) {
+        write_chunk(OP_CONSTANT, line);
+        write_chunk(index, line);
+    }else {
+    }
 }
