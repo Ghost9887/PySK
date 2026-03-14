@@ -10,6 +10,7 @@
 #include "environment.h"
 #include "dio_callable.h"
 #include "dio_function.h"
+#include "return_value.h"
 
 class Dio;
 
@@ -30,6 +31,7 @@ public:
     LiteralValue visitFunctionStmnt(std::shared_ptr<Function> stmnt) override;
     LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) override;
     LiteralValue visitWhileStmnt(std::shared_ptr<While> stmnt) override;
+    LiteralValue visitReturnStmnt(std::shared_ptr<Return> stmnt) override;
     LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) override;
     LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) override;
 

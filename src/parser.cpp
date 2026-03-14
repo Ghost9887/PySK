@@ -92,10 +92,22 @@ std::shared_ptr<Stmnt> Parser::statement() {
     if (match(TokenType::PRE)) return for_statement();
     if (match(TokenType::AK)) return if_statement();
     if (match(TokenType::VYTLAC)) return print_statement();
+    if (match(TokenType::VRATIT)) return return_statement();
     if (match(TokenType::POKIAL)) return while_statement();
     if (match(TokenType::L_BRACE)) return std::make_shared<Block>(block());
 
     return expression_statement();
+}
+
+std::shared_ptr<Stmnt> Parser::return_statement() {
+    Token keyword = previous();
+    std::shared_ptr<Expr> value = nullptr;
+    if (!check(TokenType::SEMICOLON)) {
+        value = expression();
+    }
+
+    consume(TokenType::SEMICOLON, "Ocakavany ';' za vratit");
+    return std::make_shared<Return>(keyword, value);
 }
 
 std::shared_ptr<Stmnt> Parser::for_statement() {

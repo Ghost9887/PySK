@@ -68,7 +68,7 @@ LiteralValue Interpreter::visitExpressionStmnt(std::shared_ptr<Expression> stmnt
 }
 
 LiteralValue Interpreter::visitFunctionStmnt(std::shared_ptr<Function> stmnt) {
-    std::shared_ptr<DioFunction> function = std::make_shared<DioFunction>(stmnt);
+    std::shared_ptr<DioFunction> function = std::make_shared<DioFunction>(stmnt, env);
     env->define(stmnt->name, function);
 
     return std::monostate();
@@ -77,6 +77,16 @@ LiteralValue Interpreter::visitFunctionStmnt(std::shared_ptr<Function> stmnt) {
 LiteralValue Interpreter::visitPrintStmnt(std::shared_ptr<Print> stmnt) {
     LiteralValue value = evaluate(stmnt->expression);
     print_literal(value);
+    return std::monostate();
+}
+
+LiteralValue Interpreter::visitReturnStmnt(std::shared_ptr<Return> stmnt) {
+    LiteralValue value = std::monostate();
+    if (stmnt->value) value = evaluate(stmnt->value);
+    
+    throw ReturnValue(value);
+
+    //should be unreachable
     return std::monostate();
 }
 

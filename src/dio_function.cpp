@@ -1,17 +1,22 @@
 #include "dio_function.h"
 #include "interpreter.h"
 
-DioFunction::DioFunction(std::shared_ptr<Function> declaration) :
-    declaration(declaration) {}
+DioFunction::DioFunction(std::shared_ptr<Function> declaration, std::shared_ptr<Environment> closure) :
+    declaration(declaration), closure(closure) {}
 
 LiteralValue DioFunction::call(Interpreter &interpreter, std::vector<LiteralValue> arguments) {
-    std::shared_ptr<Environment> env = std::make_shared<Environment>(interpreter.globals);
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(closure);
 
     for (int i = 0; i < declaration->params.size(); i++) {
         env->define(declaration->params.at(i), arguments.at(i));
     }
-    
-    interpreter.execute_block(declaration->body, env);
+
+    try {
+        interpreter.execute_block(declaration->body, env);
+    }catch(ReturnValue return_value) {
+        return return_value.value;
+    }
+
     return std::monostate();
 }
 

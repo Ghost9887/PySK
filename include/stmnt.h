@@ -12,6 +12,7 @@ class Function;
 class Expression;
 class Print;
 class Let;
+class Return;
 class While;
 
 //abstract base class
@@ -27,6 +28,7 @@ public:
         virtual LiteralValue visitExpressionStmnt(std::shared_ptr<Expression> stmnt) = 0;
         virtual LiteralValue visitPrintStmnt(std::shared_ptr<Print> stmnt) = 0;
         virtual LiteralValue visitLetStmnt(std::shared_ptr<Let> stmnt) = 0;
+        virtual LiteralValue visitReturnStmnt(std::shared_ptr<Return> stmnt) = 0;
         virtual LiteralValue visitWhileStmnt(std::shared_ptr<While> stmnt) = 0;
         virtual ~StmntVisitor() = default;
     };
@@ -84,6 +86,15 @@ public:
     std::shared_ptr<Expr> initializer;
 public:
     Let(Token name, std::shared_ptr<Expr> initializer);
+    LiteralValue accept(StmntVisitor &visitor) override;
+};
+
+class Return : public Stmnt, public std::enable_shared_from_this<Return> {
+public:
+    Token keyword;
+    std::shared_ptr<Expr> value;
+public:
+    Return(Token keyword, std::shared_ptr<Expr> value);
     LiteralValue accept(StmntVisitor &visitor) override;
 };
 

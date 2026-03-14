@@ -29,6 +29,7 @@ private:
     std::shared_ptr<Stmnt> if_statement();
     std::shared_ptr<Stmnt> function(std::string kind);
     std::shared_ptr<Stmnt> for_statement();
+    std::shared_ptr<Stmnt> return_statement();
     std::shared_ptr<Stmnt> while_statement();
 
     std::shared_ptr<Expr> assignment();

@@ -36,6 +36,12 @@ LiteralValue Let::accept(StmntVisitor &visitor) {
     return visitor.visitLetStmnt(shared_from_this());
 }
 
+Return::Return(Token keyword, std::shared_ptr<Expr> value) :
+    keyword(keyword), value(value) {}
+LiteralValue Return::accept(StmntVisitor &visitor) {
+    return visitor.visitReturnStmnt(shared_from_this());
+}
+
 While::While(std::shared_ptr<Expr> condition, std::shared_ptr<Stmnt> body) :
     condition(condition), body(body) {}
 LiteralValue While::accept(StmntVisitor &visitor) {
