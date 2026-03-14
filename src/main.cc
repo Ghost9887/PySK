@@ -11,7 +11,15 @@ int main(int argc, char *argv[]) {
     chunk.write_chunk(OP_CONSTANT, 123);
     chunk.write_chunk(constant, 123);
     chunk.write_chunk(OP_RETURN, 123);
+    int constant2 = chunk.add_constant(5.0);
+    chunk.write_chunk(OP_CONSTANT, 155);
+    chunk.write_chunk(constant, 155);
+    chunk.write_chunk(OP_RETURN, 155);
+    
 
+    for (int line : chunk.lines) {
+        std::cout << line << '\n';
+    }
     debugger.disassemble_chunk(chunk, "test chunk");
 
     return 0;
