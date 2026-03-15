@@ -5,6 +5,7 @@
 #include "chunk.h"
 #include "value.h"
 #include "debugger.h"
+#include "compiler.h"
 
 typedef enum {
     INTERPRET_OK,
@@ -16,7 +17,7 @@ class VM {
 public:
     VM() = default;
     ~VM() = default;
-    InterpretResult interpret(std::shared_ptr<Chunk> chunk);
+    InterpretResult interpret(const std::string source);
 private:
     InterpretResult run();
     Byte read_byte();
@@ -28,6 +29,5 @@ private:
     std::shared_ptr<Chunk> chunk;
     std::vector<Value> stack;
 };
-
 
 #endif

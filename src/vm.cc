@@ -62,8 +62,8 @@ Value VM::read_constant() {
     return chunk->constants->values.at(read_byte());
 }
 
-InterpretResult VM::interpret(std::shared_ptr<Chunk> chunk) {
-    this->chunk = chunk;
-    ip = 0;
-    return run();
+InterpretResult VM::interpret(std::string source) {
+    Compiler compiler;
+    compiler.compile(source);
+    return INTERPRET_OK;
 }

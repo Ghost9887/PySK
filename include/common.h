@@ -8,6 +8,8 @@
 #include <memory>
 #include <iomanip>
 #include <functional>
+#include <fstream>
+#include <cstring>
 
 #define DEBUG_TRACE_EXECUTION
 

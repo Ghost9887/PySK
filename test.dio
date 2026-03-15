@@ -1,8 +1,5 @@
-funk fib(n) {
-  ak (n <= 1) vratit n;
-  vratit fib(n - 2) + fib(n - 1);
-}
-
-pre (let i = 0; i < 20; i = i + 1) {
-  vytlac fib(i);
-}
+() {} ,.> >= == <= < !=
+hello
+"hello"
+30
+class or and 
