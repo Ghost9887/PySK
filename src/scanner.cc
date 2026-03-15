@@ -1,15 +1,12 @@
 #include "scanner.h"
 
-
-//TODO: REDO THIS COMPLETETLY
-
 Scanner::Scanner(const std::string source) :
     source(source), start(0), current(0), line(1) {}
 
 Token Scanner::scan_token() {
+    skip_whitespace();
     start = current;
     if (is_at_end()) return make_token(TOKEN_EOF);
-
     char c = advance();
     if (is_alpha(c)) return identifier();
     if (is_digit(c)) return number();
@@ -30,11 +27,10 @@ Token Scanner::scan_token() {
         case '<': return make_token(match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
         case '>': return make_token(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
         case '"': return string();
-        case '\n': 
-            line++;
-            break;
-        default: return error_token("Unexepected character."); 
+        default: break; 
     }
+
+    return error_token("Unexepected character.");
 }
 
 bool Scanner::is_at_end() {
@@ -63,8 +59,7 @@ Token Scanner::error_token(std::string message) {
 }
 
 char Scanner::advance() {
-    current++;
-    return source.at(current - 1);
+    return source.at(current++);
 }
 
 bool Scanner::match(char expected) {
@@ -74,12 +69,13 @@ bool Scanner::match(char expected) {
 }
 
 char Scanner::peek() {
+    if (is_at_end()) return '\0';
     return source.at(current);
 }
 
 char Scanner::peek_next() {
-    if (current >= source.length()) return '\0';
-    return source.at(current);
+    if (current + 1 >= source.length()) return '\0';
+    return source.at(current + 1);
 }
 
 void Scanner::skip_whitespace() {
@@ -91,17 +87,16 @@ void Scanner::skip_whitespace() {
             case '\t':
                 advance();
                 break;
-            case '/':
-                if (peek_next() == '/') {
-                    while (!is_at_end() && peek() != '\n') advance();
-                }else {
-                    return;
-                }
-                break;
             case '\n':
                 line++;
                 advance();
                 break;
+            case '/':
+                if (peek_next() == '/') {
+                    while(!is_at_end() && peek() != '\n') advance();
+                }else {
+                    return;
+                }
             default:
                 return;
         }

@@ -22,3 +22,7 @@ TEST_CASE("Bytes") {
 
     REQUIRE(chunk.code == expected_bytes);
 }
+
+TEST_CASE("Scanner") {
+    REQUIRE(true);
+}
