@@ -64,6 +64,10 @@ Value VM::read_constant() {
 
 InterpretResult VM::interpret(std::string source) {
     Compiler compiler;
-    compiler.compile(source);
-    return INTERPRET_OK;
+    std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>();
+    if (!compiler.compile(chunk, source)) return INTERPRET_COMPILE_ERROR;
+
+    this->chunk = chunk; 
+    InterpretResult result = run();
+    return result;
 }

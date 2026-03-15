@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <functional>
 #include <fstream>
+#include <optional>
 #include <cstring>
 
 #define DEBUG_TRACE_EXECUTION
