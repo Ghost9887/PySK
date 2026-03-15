@@ -4,7 +4,6 @@
 #include "common.h"
 #include "scanner.h"
 #include "chunk.h"
-#include "parser.h"
 
 class Compiler {
 public:
@@ -22,9 +21,12 @@ private:
     void emit_return();
     void emit_bytes(Byte byte1, Byte byte2);
 private:
-    std::unique_ptr<Parser> parser;
     std::unique_ptr<Scanner> scanner;
     std::shared_ptr<Chunk> chunk;
+    std::optional<Token> current;
+    std::optional<Token> previous;
+    bool had_error;
+    bool panic_mode;
 };
 
 #endif

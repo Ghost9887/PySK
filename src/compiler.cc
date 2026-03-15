@@ -1,34 +1,32 @@
 #include "compiler.h"
 
 Compiler::Compiler() :
-    parser(nullptr), scanner(nullptr) {}
+    scanner(nullptr), current(std::nullopt), previous(std::nullopt),
+    had_error(false), panic_mode(false) {}
 
 bool Compiler::compile(std::shared_ptr<Chunk> chunk, const std::string source) {
-    parser = std::make_unique<Parser>();
     scanner = std::make_unique<Scanner>(source);
     this->chunk = chunk;
-    parser->had_error = false;
-    parser->panic_mode = false;
     advance();
     //expression();
     consume(TOKEN_EOF, " Expect end of expression.");
     end_compiler();
-    return !parser->had_error;
+    return !had_error;
 }
 
 void Compiler::advance() {
-    parser->previous = parser->current;
+    previous = current;
 
     while (true) {
-        parser->current = scanner->scan_token();
-        if (parser->current.value().type != TOKEN_ERROR) break;
+        current = scanner->scan_token();
+        if (current.value().type != TOKEN_ERROR) break;
 
-        error_at_current(parser->current.value().lexeme);
+        error_at_current(current.value().lexeme);
     }
 }
 
 void Compiler::consume(TokenType type, std::string message) {
-    if (parser->current.value().type == type) {
+    if (current.value().type == type) {
         advance();
         return;
     }
@@ -45,7 +43,7 @@ void Compiler::emit_return() {
 }
 
 void Compiler::emit_byte(Byte byte) {
-    chunk->write_chunk(byte, parser->previous.value().line);
+    chunk->write_chunk(byte, previous.value().line);
 }
 
 void Compiler::emit_bytes(Byte byte1, Byte byte2) {
@@ -54,16 +52,16 @@ void Compiler::emit_bytes(Byte byte1, Byte byte2) {
 }
 
 void Compiler::error_at_current(std::string message) {
-    error_at(parser->current.value(), message);
+    error_at(current.value(), message);
 }
 
 void Compiler::error(std::string message) {
-    error_at(parser->previous.value(), message);
+    error_at(previous.value(), message);
 }
 
 void Compiler::error_at(const Token &token, std::string message) {
-    if (parser->panic_mode) return;
-    parser->panic_mode = true;
+    if (panic_mode) return;
+    panic_mode = true;
     std::cerr << "[line " << token.line << "] Error";
 
     if (token.type == TOKEN_EOF) {
@@ -75,5 +73,5 @@ void Compiler::error_at(const Token &token, std::string message) {
     }
 
     std::cerr << message << '\n';
-    parser->had_error = true;
+    had_error = true;
 }
