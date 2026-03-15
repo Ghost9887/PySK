@@ -17,14 +17,14 @@ void Debugger::disassemble_chunk(const Chunk &chunk, std::string name) {
     std::cout << "==" << name << "==" << '\n';
 
     for (int offset = 0; offset < chunk.code.size();) {
-        offset = disassemble_instruction(chunk, offset);
+        offset = Debugger::disassemble_instruction(chunk, offset);
     }
 }
 
 int Debugger::constant_instruction(std::string name, const Chunk &chunk, int offset) {
     Byte constant = chunk.code.at(offset + 1);
     std::cout << name << constant << " '";
-    chunk.constants->print_value(chunk.constants->values.at(constant));
+    Values::print_value(chunk.constants->values.at(constant));
     std::cout << "'\n";
     return offset + 2;
 }
@@ -45,6 +45,16 @@ int Debugger::disassemble_instruction(const Chunk &chunk, int offset) {
 
     Byte instruction = chunk.code.at(offset);
     switch (instruction) {
+        case OP_ADD:
+            return Debugger::simple_instruction("OP_ADD", offset);
+        case OP_SUBTRACT:
+            return Debugger::simple_instruction("OP_SUBTRACT", offset);
+        case OP_MULTIPLY:
+            return Debugger::simple_instruction("OP_MULTIPLY", offset);
+        case OP_DIVIDE:
+            return Debugger::simple_instruction("OP_DIVIDE", offset);
+        case OP_NEGATE:
+            return Debugger::simple_instruction("OP_NEGATE", offset);
         case OP_RETURN:
             return Debugger::simple_instruction("OP_RETURN", offset);
         case OP_CONSTANT:

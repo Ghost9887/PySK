@@ -10,7 +10,7 @@ public:
     Values() = default;
     ~Values() = default;
     void write_value(Value value);
-    void print_value(Value value);
+    static void print_value(Value value);
 public:
     std::vector<Value> values;
 };
