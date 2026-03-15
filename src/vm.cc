@@ -20,20 +20,15 @@ InterpretResult VM::run() {
                 break;
             }
             case OP_NEGATE: 
-                stack.push_back(-pop()); 
-                break;
+                stack.push_back(-pop()); break;
             case OP_ADD: 
-                binary_op('+');
-                break;
+                binary_op('+'); break;
             case OP_SUBTRACT: 
-                binary_op('-');
-                break;
+                binary_op('-'); break;
             case OP_MULTIPLY: 
-                binary_op('*');
-                break;
+                binary_op('*'); break;
             case OP_DIVIDE: 
-                binary_op('/');
-                break;
+                binary_op('/'); break;
             case OP_RETURN: {
                 Values::print_value(pop());
                 return INTERPRET_OK;

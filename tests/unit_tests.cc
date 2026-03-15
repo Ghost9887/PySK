@@ -2,6 +2,7 @@
 #include "common.h"
 #include "chunk.h"
 #include "debugger.h"
+#include "vm.h"
 
 TEST_CASE("Bytes") {
     Chunk chunk;
@@ -21,4 +22,3 @@ TEST_CASE("Bytes") {
 
     REQUIRE(chunk.code == expected_bytes);
 }
-
