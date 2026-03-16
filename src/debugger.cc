@@ -1,14 +1,37 @@
 #include "debugger.h"
 
+int Debugger::get_line(std::shared_ptr<Chunk> chunk, int offset) {
+    int counter = 0;
+    for (int i = 0; i < chunk->lines.size(); i+=2) {
+        counter += chunk->lines.at(i);
+        if (offset < counter) return chunk->lines.at(i + 1);
+    }
+
+    return -1;
+}
+
 int Debugger::print_simple_instruction(const std::string name, int offset) {
-    std::cout << "   " << name << '\n';
+    std::cout << "  " << name << '\n';
     return ++offset;
 }
 
+int Debugger::print_constant_instruction(const std::string name, std::shared_ptr<Chunk> chunk, int offset) {
+    std::cout << "  " << name;
+    Value value = chunk->constants->values.at(chunk->codes.at(offset + 1));
+    std::cout << "  " << "'" << std::to_string(value) << "'" << '\n';
+    return offset + 2;
+}
+
 int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
-    std::cout << std::setw(5) << std::setfill('0') << chunk->codes.at(offset);
+    std::cout << std::setw(4) << std::setfill('0') << std::to_string(chunk->codes.at(offset));
+    if (offset > 0 && Debugger::get_line(chunk, offset) == Debugger::get_line(chunk, offset - 1)) {
+        std::cout << "  |";
+    }else {
+        std::cout << " " << std::to_string(Debugger::get_line(chunk, offset));
+    }
     switch (chunk->codes.at(offset)) {
         case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
+        case OP_CONSTANT: return Debugger::print_constant_instruction("OP_CONSTANT", chunk, offset);
         default: 
             std::cout << "Uknown byte" << '\n';
             return ++offset;

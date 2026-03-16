@@ -11,7 +11,11 @@ void repl() {
 
 int main(int argc, char *argv[]) {
     std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>();
-    chunk->write_chunk(OP_RETURN);
+    chunk->write_chunk(OP_RETURN, 123);
+    chunk->write_constant(30.0, 123);
+    chunk->write_chunk(OP_RETURN, 123);
+    chunk->write_chunk(OP_RETURN, 150);
+    chunk->write_chunk(OP_RETURN, 150);
 
     Debugger::print_chunk(chunk);
     /*
