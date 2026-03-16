@@ -1,16 +1,25 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "chunk.h"
 #include "debugger.h"
 #include "vm.h"
+#include "dio.h"
+
+//IMPLEMENT THE SCANNER
 
 void run_file(const char *file_path) {
-}
+    std::string source;
+    std::fstream file(file_path);
 
-void repl() {
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    source = buffer.str();
+    Dio::run(source);
 }
 
 int main(int argc, char *argv[]) {
+    /*
     VM vm;
     std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>();
     chunk->write_constant(30.0, 123);
@@ -25,15 +34,12 @@ int main(int argc, char *argv[]) {
 
     Debugger::print_chunk(chunk);
     vm.interpret(chunk);
-    /*
-    if (argc == 1) {
-        repl();
-    }else if (argc == 2) {
+    */
+    if (argc == 2) {
         run_file(argv[1]);
     }else {
         std::cerr << "Usage: dio [path]" << '\n';
         exit(64);
     }
-    */
     return 0;
 }
