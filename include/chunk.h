@@ -1,30 +1,22 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include "common.h"
-#include "value.h"
+#include <vector>
+#include <cstdint>
+
+using Byte = std::uint8_t; 
 
 typedef enum {
     OP_RETURN,
-    OP_CONSTANT,
-    OP_CONSTANT_LONG,
-    OP_NEGATE,
-    OP_ADD,
-    OP_SUBTRACT,
-    OP_MULTIPLY,
-    OP_DIVIDE,
 }OpCode;
 
 class Chunk {
 public:
-    Chunk();
+    Chunk() = default;
     ~Chunk() = default;
-    void write_chunk(Byte byte, int line);
-    void write_constant(Value value, int line);
+    void write_chunk(Byte byte);
 public:
-    std::vector<Byte> code;
-    std::unique_ptr<Values> constants;
-    std::vector<int> lines;
+    std::vector<Byte> codes;
 };
 
 #endif

@@ -1,20 +1,18 @@
 #ifndef DEBUGGER_H
 #define DEBUGGER_H
 
-#include "common.h"
+#include <memory>
+#include <iostream>
+#include <iomanip>
 #include "chunk.h"
-#include "value.h"
 
 class Debugger {
 public:
     Debugger() = default;
     ~Debugger() = default;
-    static void disassemble_chunk(const Chunk &chunk, std::string name);
-    static int disassemble_instruction(const Chunk &chunk, int offset);
-private:
-    static int get_line(const Chunk &chunk, int offset);
-    static int simple_instruction(std::string name, int offset); 
-    static int constant_instruction(std::string name, const Chunk &chunk, int offset);
+    static void print_chunk(std::shared_ptr<Chunk> chunk);
+    static int print_instruction(std::shared_ptr<Chunk> chunk, int offset);
+    static int print_simple_instruction(const std::string name, int offset);
 };
 
 #endif
