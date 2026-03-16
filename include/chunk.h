@@ -9,6 +9,11 @@
 using Byte = std::uint8_t; 
 
 typedef enum {
+    OP_ADD,
+    OP_MINUS,
+    OP_MULTIPLY,
+    OP_DIVIDE,
+    OP_NEGATE,
     OP_CONSTANT,
     OP_RETURN,
 }OpCode;

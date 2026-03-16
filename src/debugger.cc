@@ -30,6 +30,11 @@ int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
         std::cout << " " << std::to_string(Debugger::get_line(chunk, offset));
     }
     switch (chunk->codes.at(offset)) {
+        case OP_ADD: return Debugger::print_simple_instruction("OP_ADD", offset);
+        case OP_MINUS: return Debugger::print_simple_instruction("OP_MINUS", offset);
+        case OP_MULTIPLY: return Debugger::print_simple_instruction("OP_MULTIPLY", offset);
+        case OP_DIVIDE: return Debugger::print_simple_instruction("OP_DIVIDE", offset);
+        case OP_NEGATE: return Debugger::print_simple_instruction("OP_NEGATE", offset);
         case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
         case OP_CONSTANT: return Debugger::print_constant_instruction("OP_CONSTANT", chunk, offset);
         default: 
