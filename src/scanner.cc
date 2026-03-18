@@ -81,9 +81,7 @@ void Scanner::number() {
 
 void Scanner::make_token(TokenType type) {
     std::string lexeme = "";
-    if (current - start == 1) {
-        lexeme += source.substr(start, 2);
-    }else if (current > start) {
+    if (current > start) {
         lexeme += source.substr(start, current - start);
     }else {
         lexeme += peek();

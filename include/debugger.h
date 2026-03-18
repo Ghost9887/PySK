@@ -5,11 +5,13 @@
 #include <iostream>
 #include <iomanip>
 #include "chunk.h"
+#include "stmnt.h"
 
 class Debugger {
 public:
     Debugger() = default;
     ~Debugger() = default;
+    static void print_ast(std::shared_ptr<Stmnt> stmnt);
     static void print_chunk(std::shared_ptr<Chunk> chunk);
     static int print_instruction(std::shared_ptr<Chunk> chunk, int offset);
     static int print_simple_instruction(const std::string name, int offset);
