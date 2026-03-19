@@ -25,9 +25,58 @@ public:
     BinaryExpr(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
     std::string to_string() override;
 public:
-    std::shared_ptr<Expr> right;
-    Token op;
     std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+};
+
+class ConditionalExpr : public Expr {
+public:
+    ConditionalExpr(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
+    std::string to_string() override;
+public:
+    std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+};
+
+class EqualityExpr : public Expr {
+public:
+    EqualityExpr(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
+    std::string to_string() override;
+public:
+    std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+};
+
+class AdditiveExpr : public Expr {
+public:
+    AdditiveExpr(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
+    std::string to_string() override;
+public:
+    std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+};
+
+class FactorExpr : public Expr {
+public:
+    FactorExpr(std::shared_ptr<Expr> left, Token op, std::shared_ptr<Expr> right);
+    std::string to_string() override;
+public:
+    std::shared_ptr<Expr> left;
+    Token op;
+    std::shared_ptr<Expr> right;
+};
+
+class UnaryExpr : public Expr {
+public:
+    UnaryExpr(Token op, std::shared_ptr<Expr> value);
+    std::string to_string() override;
+public:
+    Token op;
+    std::shared_ptr<Expr> value;
 };
 
 #endif
