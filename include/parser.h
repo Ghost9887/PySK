@@ -13,11 +13,13 @@ public:
 private:
     std::shared_ptr<Stmnt> statement();
     std::shared_ptr<Expr> expression();
+    std::shared_ptr<Expr> binary();
+    std::shared_ptr<Expr> primary();
     TokenType peek_type();
     void advance(); 
     template<typename... TokenTypes>
     bool match(TokenTypes... types);
-    void consume(TokenType type);
+    void consume(TokenType type, std::string message);
     bool is_at_end();
 private:
     std::vector<Token> tokens;

@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
+#include <variant>
+#include "values.h"
 
 typedef enum {
     T_PLUS, T_MINUS, T_STAR, T_SLASH,
@@ -76,16 +78,19 @@ inline static const std::unordered_map<std::string, TokenType> keywords_map = {
     {"nepravda", T_NEPRAVDA},
 };
 
+using LiteralValue = std::variant<std::monostate, Value, std::string, bool>;
+
 class Token {
 public:
-    Token(TokenType type, std::string lexeme, int line);
+    Token(TokenType type, std::string lexeme, int line, LiteralValue literal);
     ~Token() = default;
     std::string to_string();
+    static std::string literal_to_string(LiteralValue literal);
 public:
     TokenType type;
     std::string lexeme;
     int line;
-
+    LiteralValue literal;
     bool operator==(const Token& other) const {
         return type == other.type &&
                lexeme == other.lexeme &&

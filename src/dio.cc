@@ -8,4 +8,5 @@ void Dio::run(const std::string source) {
 
     Parser parser(std::move(tokens));
     std::vector<std::shared_ptr<Stmnt>> statements = parser.parse();
+    Debugger::print_ast(statements);
 }

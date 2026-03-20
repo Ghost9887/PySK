@@ -81,7 +81,11 @@ void Scanner::identifier() {
     if (keywords_map.find(identifier) == keywords_map.end()) {
         make_token(T_IDENTIFIER);
     }else {
-        make_token(keywords_map.at(identifier));
+        TokenType type = keywords_map.at(identifier);
+
+        if (type == T_PRAVDA) make_token(type, true);
+        else if (type == T_NEPRAVDA) make_token(type, false);
+        else make_token(type);
     }
 }
 
@@ -93,7 +97,8 @@ void Scanner::string() {
         std::cout << "Unterminated string." << '\n';
         return;
     }
-    make_token(T_STRING);
+    std::string str = source.substr(start, current - start);
+    make_token(T_STRING, str);
 }
 
 void Scanner::number() {
@@ -103,8 +108,8 @@ void Scanner::number() {
         advance();
         while (!is_at_end() && is_digit(peek())) advance();
     }
-    
-    make_token(T_NUMBER);
+    std::string lexeme = source.substr(start, current  - start);
+    make_token(T_NUMBER, std::stod(lexeme));
 }
 
 void Scanner::make_token(TokenType type) {
@@ -114,10 +119,14 @@ void Scanner::make_token(TokenType type) {
     }else {
         lexeme += peek();
     }
-    tokens.emplace_back(Token(type, lexeme, line));
+    tokens.emplace_back(Token(type, lexeme, line, std::monostate()));
 }
 
-
+void Scanner::make_token(TokenType type, LiteralValue literal) {
+    std::string lexeme = "";
+    lexeme += source.substr(start, current - start);
+    tokens.emplace_back(Token(type, lexeme, line, literal));
+}
 
 bool Scanner::is_alpha_numeric(char c) {
     return is_digit(c) || is_alpha(c);

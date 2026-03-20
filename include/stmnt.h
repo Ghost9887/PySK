@@ -16,7 +16,6 @@ public:
 public:
     ExpressionStmnt(std::shared_ptr<Expr> expr);
     std::string to_string() override;
-    bool had_error;
 };
 
 #endif

@@ -55,3 +55,11 @@ void Debugger::print_tokens(std::vector<Token> tokens) {
         std::cout << token.to_string() << '\n';
     }
 }
+
+void Debugger::print_ast(std::vector<std::shared_ptr<Stmnt>> statements) {
+    for (int i = 0; i < statements.size(); i++) {
+        std::cout << statements.at(i)->to_string();
+    }
+
+    std::cout << '\n';
+}

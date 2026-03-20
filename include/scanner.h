@@ -12,6 +12,7 @@ public:
     std::vector<Token> tokenize();
 private:
     void make_token(TokenType type);
+    void make_token(TokenType type, LiteralValue literal);
     bool is_alpha_numeric(char c);
     bool is_alpha(char c);
     void identifier();
