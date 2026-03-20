@@ -60,7 +60,7 @@ void Scanner::identifier() {
 void Scanner::string() {
     advance();
     start = current;
-    while (!is_at_end() && peek() != '"') advance();
+    while (!is_at_end() && peek_next() != '"') advance();
     if (is_at_end()) {
         std::cout << "Unterminated string." << '\n';
         return;
