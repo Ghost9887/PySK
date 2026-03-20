@@ -4,6 +4,7 @@
 #include <vector>
 #include "token.h"
 #include "stmnt.h"
+#include "parse_error.h"
 
 class Parser {
 public:
@@ -16,11 +17,13 @@ private:
     std::shared_ptr<Expr> binary();
     std::shared_ptr<Expr> primary();
     TokenType peek_type();
+    Token peek();
     void advance(); 
     template<typename... TokenTypes>
     bool match(TokenTypes... types);
     void consume(TokenType type, std::string message);
     bool is_at_end();
+    void error(std::string message);
 private:
     std::vector<Token> tokens;
     int ip;

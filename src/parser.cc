@@ -1,5 +1,7 @@
 #include "parser.h"
 
+//TODO: fix errors
+
 Parser::Parser(std::vector<Token> tokens) :
     tokens(tokens), ip(0), had_error(false) {}
 
@@ -17,7 +19,7 @@ std::shared_ptr<Stmnt> Parser::statement() {
 
 std::shared_ptr<Expr> Parser::expression() {
     std::shared_ptr<Expr> expr = binary();
-    consume(T_SEMICOLON, "Expected ';'.");
+    consume(T_SEMICOLON, "Ocakvany ';'.");
     return expr;
 }
 
@@ -42,13 +44,17 @@ TokenType Parser::peek_type() {
     return tokens.at(ip).type;
 }
 
+Token Parser::peek() {
+    return tokens.at(ip);
+}
+
 void Parser::advance() {
     ip++;
 }
 
 template<typename... TokenTypes>
 bool Parser::match(TokenTypes... types) {
-    if (is_at_end()) return false;
+    if (is_at_end()) error("Neocakvany koniec vyrazu.");
     for (TokenType type : {types...}) {
         if (peek_type() == type){ 
             advance();
@@ -60,10 +66,15 @@ bool Parser::match(TokenTypes... types) {
 }
 
 void Parser::consume(TokenType type, std::string message) {
-    if (peek_type() != type) return;
+    if (is_at_end()) error(message); 
+    else if (peek_type() != type) error(message);
     advance();
 }
 
 bool Parser::is_at_end() {
     return ip >= tokens.size();
+}
+
+void Parser::error(std::string message) {
+    throw ParseError(message);
 }
