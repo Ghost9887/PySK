@@ -24,11 +24,23 @@ std::shared_ptr<Expr> Parser::expression() {
 }
 
 std::shared_ptr<Expr> Parser::binary() {
-    std::shared_ptr<Expr> expr = primary();
+    std::shared_ptr<Expr> expr = unary();
     if (match(T_PLUS, T_MINUS, T_STAR, T_SLASH)) {
         Token op = tokens.at(ip - 1);
-        std::shared_ptr<Expr> right = primary();
+        std::shared_ptr<Expr> right = unary();
         return std::make_shared<BinaryExpr>(expr, op, right);
+    }
+
+    return expr;
+}
+
+std::shared_ptr<Expr> Parser::unary() {
+    std::shared_ptr<Expr> expr = primary();
+
+    if (match(T_MINUS)) {
+        Token op = peek();
+        std::shared_ptr<Expr> right = primary();
+        return std::make_shared<UnaryExpr>(op, right);
     }
 
     return expr;

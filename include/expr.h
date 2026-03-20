@@ -22,6 +22,15 @@ public:
     std::string to_string() override;
 };
 
+class UnaryExpr: public Expr {
+public:
+    Token op;
+    std::shared_ptr<Expr> right;
+public:
+    UnaryExpr(Token op, std::shared_ptr<Expr> right);
+    std::string to_string() override;
+};
+
 class LiteralExpr : public Expr {
 public:
     LiteralValue literal;

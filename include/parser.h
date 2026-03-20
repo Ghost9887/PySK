@@ -15,6 +15,7 @@ private:
     std::shared_ptr<Stmnt> statement();
     std::shared_ptr<Expr> expression();
     std::shared_ptr<Expr> binary();
+    std::shared_ptr<Expr> unary();
     std::shared_ptr<Expr> primary();
     TokenType peek_type();
     Token peek();

@@ -6,6 +6,12 @@ std::string BinaryExpr::to_string() {
     return "BinaryExpr {" + left->to_string() + ", " + right->to_string() + " }"; 
 }
 
+UnaryExpr::UnaryExpr(Token op, std::shared_ptr<Expr> right) :
+    op(op), right(right) {}
+std::string UnaryExpr::to_string() {
+    return "UnaryExpr {" + tokens_map.at(op.type) + ", " + right->to_string() + "}";
+}
+
 LiteralExpr::LiteralExpr(LiteralValue literal) :
     literal(literal) {}
 std::string LiteralExpr::to_string() {
