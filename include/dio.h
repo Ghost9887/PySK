@@ -4,6 +4,7 @@
 #include <iostream>
 #include "scanner.h"
 #include "debugger.h"
+#include "parser.h"
 
 class Dio {
 public: 

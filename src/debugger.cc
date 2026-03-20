@@ -49,3 +49,9 @@ void Debugger::print_chunk(std::shared_ptr<Chunk> chunk) {
         index = Debugger::print_instruction(chunk, index);
     }
 }
+
+void Debugger::print_tokens(std::vector<Token> tokens) {
+    for (Token token : tokens) {
+        std::cout << token.to_string() << '\n';
+    }
+}

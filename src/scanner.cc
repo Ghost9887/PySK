@@ -20,10 +20,38 @@ std::vector<Token> Scanner::tokenize() {
             case '*': make_token(T_STAR); break;
             case ';': make_token(T_SEMICOLON); break;
             case '"': string(); break;
-            case '!': make_token(match('=') ? T_BANG_EQUAL : T_BANG); break;
-            case '=': make_token(match('=') ? T_EQUAL_EQUAL : T_EQUAL); break;
-            case '<': make_token(match('=') ? T_LESS_EQUAL : T_LESS); break;
-            case '>': make_token(match('=') ? T_GREATER_EQUAL : T_GREATER); break;
+            case '!':
+                if (match('=')) {
+                    advance();
+                    make_token(T_BANG_EQUAL);
+                    continue;
+                }
+                make_token(T_BANG);
+                break;
+            case '=':
+                if (match('=')) {
+                    advance();
+                    make_token(T_EQUAL_EQUAL);
+                    continue;
+                }
+                make_token(T_EQUAL);
+                break;
+            case '<':
+                if (match('=')) {
+                    advance();
+                    make_token(T_LESS_EQUAL);
+                    continue;
+                }
+                make_token(T_LESS);
+                break;
+            case '>':
+                if (match('=')) {
+                    advance();
+                    make_token(T_GREATER_EQUAL);
+                    continue;
+                }
+                make_token(T_GREATER);
+                break;
             case ' ':
             case '\r':
             case '\t':
@@ -48,7 +76,7 @@ std::vector<Token> Scanner::tokenize() {
 }
 
 void Scanner::identifier() {
-    while (!is_at_end() && is_alpha_numeric(peek_next())) advance();
+    while (!is_at_end() && is_alpha_numeric(peek())) advance();
     std::string identifier = source.substr(start, current - start);   
     if (keywords_map.find(identifier) == keywords_map.end()) {
         make_token(T_IDENTIFIER);
@@ -60,7 +88,7 @@ void Scanner::identifier() {
 void Scanner::string() {
     advance();
     start = current;
-    while (!is_at_end() && peek_next() != '"') advance();
+    while (!is_at_end() && peek() != '"') advance();
     if (is_at_end()) {
         std::cout << "Unterminated string." << '\n';
         return;
@@ -69,7 +97,7 @@ void Scanner::string() {
 }
 
 void Scanner::number() {
-    while (!is_at_end() && is_digit(peek_next())) advance();
+    while (!is_at_end() && is_digit(peek())) advance();
 
     if (!is_at_end() && peek() == '.' && is_digit(peek_next())) {
         advance();
@@ -80,7 +108,6 @@ void Scanner::number() {
 }
 
 void Scanner::make_token(TokenType type) {
-    advance();
     std::string lexeme = "";
     if (current > start) {
         lexeme += source.substr(start, current - start);
