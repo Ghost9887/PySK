@@ -49,7 +49,3 @@ void Debugger::print_chunk(std::shared_ptr<Chunk> chunk) {
         index = Debugger::print_instruction(chunk, index);
     }
 }
-
-void Debugger::print_ast(std::shared_ptr<Stmnt> stmnt) {
-    std::cout << stmnt->to_string() << '\n';
-}

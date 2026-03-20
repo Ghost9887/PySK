@@ -48,7 +48,7 @@ std::vector<Token> Scanner::tokenize() {
 }
 
 void Scanner::identifier() {
-    while (!is_at_end() && is_alpha_numeric(peek())) advance();
+    while (!is_at_end() && is_alpha_numeric(peek_next())) advance();
     std::string identifier = source.substr(start, current - start);   
     if (keywords_map.find(identifier) == keywords_map.end()) {
         make_token(T_IDENTIFIER);
@@ -69,7 +69,7 @@ void Scanner::string() {
 }
 
 void Scanner::number() {
-    while (!is_at_end() && is_digit(peek())) advance();
+    while (!is_at_end() && is_digit(peek_next())) advance();
 
     if (!is_at_end() && peek() == '.' && is_digit(peek_next())) {
         advance();
@@ -80,6 +80,7 @@ void Scanner::number() {
 }
 
 void Scanner::make_token(TokenType type) {
+    advance();
     std::string lexeme = "";
     if (current > start) {
         lexeme += source.substr(start, current - start);

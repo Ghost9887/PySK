@@ -17,7 +17,7 @@ typedef enum {
 
     T_LET, T_A, T_ALEBO, T_AK, T_INAK, T_POKIAL,
     T_PRE, T_SLUCKA, T_TRIEDA, T_FUNK, T_VRATIT,
-    T_VYTLAC
+    T_VYTLAC, T_PRAVDA, T_NEPRAVDA
 }TokenType;
 
 inline static const std::unordered_map<TokenType, std::string> tokens_map = {
@@ -55,6 +55,8 @@ inline static const std::unordered_map<TokenType, std::string> tokens_map = {
     {T_FUNK, "Funk"},
     {T_VRATIT, "Vratit"},
     {T_VYTLAC, "Vytlac"},
+    {T_PRAVDA, "Pravda"},
+    {T_NEPRAVDA, "Nepravda"},
 };
 
 inline static const std::unordered_map<std::string, TokenType> keywords_map = {
@@ -70,6 +72,8 @@ inline static const std::unordered_map<std::string, TokenType> keywords_map = {
     {"funk", T_FUNK},
     {"vratit", T_VRATIT},
     {"vytlac", T_VYTLAC},
+    {"pravda", T_PRAVDA},
+    {"nepravda", T_NEPRAVDA},
 };
 
 class Token {

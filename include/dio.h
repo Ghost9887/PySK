@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include "scanner.h"
-#include "parser.h"
 #include "debugger.h"
 
 class Dio {
