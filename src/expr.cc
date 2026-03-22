@@ -17,3 +17,9 @@ LiteralExpr::LiteralExpr(LiteralValue literal) :
 std::string LiteralExpr::to_string() {
     return "LiteralExpr {" + Token::literal_to_string(literal) + "}";
 }
+
+GroupingExpr::GroupingExpr(std::shared_ptr<Expr> expression) :
+    expression(expression) {}
+std::string GroupingExpr::to_string() {
+    return "GroupingExpr {" + expression->to_string() + " }";
+}

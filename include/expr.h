@@ -39,4 +39,12 @@ public:
     std::string to_string() override;
 };
 
+class GroupingExpr : public Expr {
+public:
+    std::shared_ptr<Expr> expression;
+public:
+    GroupingExpr(std::shared_ptr<Expr> expression);
+    std::string to_string() override;
+};
+
 #endif
