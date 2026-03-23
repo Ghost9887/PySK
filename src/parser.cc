@@ -24,7 +24,31 @@ std::shared_ptr<Expr> Parser::expression() {
 }
 
 std::shared_ptr<Expr> Parser::binary() {
-    return additive();
+    return equality();
+}
+
+std::shared_ptr<Expr> Parser::equality() {
+    std::shared_ptr<Expr> expr = comparison();
+
+    if (match(T_BANG_EQUAL, T_EQUAL_EQUAL)) {
+        Token op = tokens.at(ip - 1);
+        std::shared_ptr<Expr> right = comparison();
+        return std::make_shared<BinaryExpr>(expr, op, right);
+    }
+
+    return expr;
+}
+
+std::shared_ptr<Expr> Parser::comparison() {
+    std::shared_ptr<Expr> expr = additive();
+
+    if (match(T_GREATER, T_GREATER_EQUAL, T_LESS, T_LESS_EQUAL)) {
+        Token op = tokens.at(ip - 1);
+        std::shared_ptr<Expr> right = additive();
+        return std::make_shared<BinaryExpr>(expr, op, right);
+    }
+
+    return expr;
 }
 
 std::shared_ptr<Expr> Parser::additive() {
