@@ -32,7 +32,7 @@ std::shared_ptr<Expr> Parser::additive() {
 
     if (match(T_PLUS, T_MINUS)) {
         Token op = tokens.at(ip - 1);
-        std::shared_ptr<Expr> right = binary();
+        std::shared_ptr<Expr> right = factor();
         return std::make_shared<BinaryExpr>(expr, op, right);
     }
 
@@ -44,7 +44,7 @@ std::shared_ptr<Expr> Parser::factor() {
 
     if (match(T_STAR, T_SLASH)) {
         Token op = tokens.at(ip - 1);
-        std::shared_ptr<Expr> right = binary();
+        std::shared_ptr<Expr> right = unary();
         return std::make_shared<BinaryExpr>(expr, op, right);
     }
 
@@ -52,19 +52,23 @@ std::shared_ptr<Expr> Parser::factor() {
 }
 
 std::shared_ptr<Expr> Parser::unary() {
-    std::shared_ptr<Expr> expr = primary();
-
-    if (match(T_MINUS)) {
+    if (match(T_MINUS, T_BANG)) {
         Token op = peek();
-        std::shared_ptr<Expr> right = primary();
+        std::shared_ptr<Expr> right = unary();
         return std::make_shared<UnaryExpr>(op, right);
     }
 
-    return expr;
+    return primary();
 }
 
 std::shared_ptr<Expr> Parser::primary() {
     if (match(T_NUMBER)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
+
+    if (match(T_LPAREN)) {
+        std::shared_ptr<Expr> expr = binary();
+        consume(T_RPAREN, "Ocakvany ')'.");
+        return std::make_shared<GroupingExpr>(expr);
+    }
 
     return nullptr;
 }
