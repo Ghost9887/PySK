@@ -33,36 +33,63 @@ void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
     Byte code;
 
     switch (expr->op.type) {
-        case T_PLUS: {
-            //double
-            if (std::holds_alternative<Value>(a) && std::holds_alternative<Value>(b)) {
-                code = OP_ADD;
+        case T_PLUS:
+            if (is_value(a) && is_value(b)) code = OP_ADD;
+            break;
+        case T_MINUS:
+            if (is_value(a) && is_value(b)) code = OP_MINUS;
+            break;
+        case T_STAR: 
+            if (is_value(a) && is_value(b)) code = OP_MULTIPLY;
+            break;
+        case T_SLASH: 
+            if (is_value(a) && is_value(b)) code = OP_DIVIDE;
+            break;
+        case T_EQUAL_EQUAL: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) == std::get<Value>(b)) code = OP_TRUE;
+                else code = OP_FALSE;
             }
             break;
         }
-        case T_MINUS: {
-            //double
-            if (std::holds_alternative<Value>(a) && std::holds_alternative<Value>(b)) {
-                code = OP_MINUS;
+        case T_BANG_EQUAL: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) == std::get<Value>(b)) code = OP_FALSE;
+                else code = OP_TRUE;
             }
             break;
         }
-        case T_STAR: {
-            //double
-            if (std::holds_alternative<Value>(a) && std::holds_alternative<Value>(b)) {
-                code = OP_MULTIPLY;
+        case T_GREATER: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) > std::get<Value>(b)) code = OP_TRUE;
+                else code = OP_FALSE;
             }
             break;
         }
-        case T_SLASH: {
-            //double
-            if (std::holds_alternative<Value>(a) && std::holds_alternative<Value>(b)) {
-                code = OP_DIVIDE;
+        case T_GREATER_EQUAL: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) >= std::get<Value>(b)) code = OP_TRUE;
+                else code = OP_FALSE;
+            }
+            break;
+        }
+        case T_LESS: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) < std::get<Value>(b)) code = OP_TRUE;
+                else code = OP_FALSE;
+            }
+            break;
+        }
+        case T_LESS_EQUAL: {
+            if (is_value(a) && is_value(b)) {
+                if (std::get<Value>(a) <= std::get<Value>(b)) code = OP_TRUE;
+                else code = OP_FALSE;
             }
             break;
         }
         defualt: break;
     }
+
     emit_binary_expr(std::get<Value>(a), std::get<Value>(b), code, get_line(expr->op));
 }
 
@@ -72,6 +99,10 @@ LiteralValue Compiler::get_value(std::shared_ptr<Expr> expr) {
     }
 
     return std::monostate();
+}
+
+bool Compiler::is_value(LiteralValue value) {
+    return std::holds_alternative<Value>(value);
 }
 
 int Compiler::get_line(Token &token) {

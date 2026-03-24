@@ -13,6 +13,8 @@ InterpretResult VM::run() {
             case OP_MULTIPLY: stack.push_back(binary_op('*')); break;
             case OP_NEGATE: stack.push_back(-pop()); break;
             case OP_RETURN: std::cout << pop() << '\n'; break;
+            case OP_TRUE: stack.push_back(1.0); break;
+            case OP_FALSE: stack.push_back(0.0); break;
             case OP_CONSTANT: {
                 Value value = read_constant();
                 stack.push_back(value);
