@@ -24,6 +24,22 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
 void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
     if (auto e = std::dynamic_pointer_cast<BinaryExpr>(expr)) {
         evaluate_binary_expression(e);
+    }else if (auto e = std::dynamic_pointer_cast<UnaryExpr>(expr)) {
+        evaluate_unary_expression(e);
+    }
+}
+
+void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
+    LiteralValue value = get_value(expr->right);
+
+    switch (expr->op.type) {
+        case T_MINUS:
+            if (is_value(value)) {
+                emit_value(std::get<Value>(value), get_line(expr->op));
+                emit_byte(OP_NEGATE, get_line(expr->op));
+            }
+            break;
+        default: break;
     }
 }
 
@@ -95,7 +111,7 @@ void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
 
 LiteralValue Compiler::get_value(std::shared_ptr<Expr> expr) {
     if (auto e = std::dynamic_pointer_cast<LiteralExpr>(expr)) {
-            return e->literal;
+        return e->literal;
     }
 
     return std::monostate();
@@ -103,6 +119,10 @@ LiteralValue Compiler::get_value(std::shared_ptr<Expr> expr) {
 
 bool Compiler::is_value(LiteralValue value) {
     return std::holds_alternative<Value>(value);
+}
+
+bool Compiler::is_bool(LiteralValue value) {
+    return std::holds_alternative<bool>(value);
 }
 
 int Compiler::get_line(Token &token) {

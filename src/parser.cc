@@ -77,7 +77,7 @@ std::shared_ptr<Expr> Parser::factor() {
 
 std::shared_ptr<Expr> Parser::unary() {
     if (match(T_MINUS, T_BANG)) {
-        Token op = peek();
+        Token op = tokens.at(ip - 1);
         std::shared_ptr<Expr> right = unary();
         return std::make_shared<UnaryExpr>(op, right);
     }
