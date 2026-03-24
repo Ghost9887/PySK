@@ -12,15 +12,13 @@ InterpretResult VM::run() {
             case OP_DIVIDE: stack.push_back(binary_op('/')); break;
             case OP_MULTIPLY: stack.push_back(binary_op('*')); break;
             case OP_NEGATE: stack.push_back(-pop()); break;
-            case OP_RETURN: {
-                std::cout << pop() << '\n';
-                return INTERPRET_OK;
-            }
+            case OP_RETURN: std::cout << pop() << '\n'; break;
             case OP_CONSTANT: {
                 Value value = read_constant();
                 stack.push_back(value);
                 break;
             }
+            case OP_END: return INTERPRET_OK;
             default: return INTERPRET_COMPILE_ERROR;
         }
     }

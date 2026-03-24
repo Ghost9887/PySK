@@ -16,6 +16,7 @@ typedef enum {
     OP_NEGATE,
     OP_CONSTANT,
     OP_RETURN,
+    OP_END,
 }OpCode;
 
 class Chunk {

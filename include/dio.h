@@ -5,6 +5,8 @@
 #include "scanner.h"
 #include "debugger.h"
 #include "parser.h"
+#include "compiler.h"
+#include "vm.h"
 
 class Dio {
 public: 

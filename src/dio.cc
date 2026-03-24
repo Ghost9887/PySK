@@ -9,4 +9,10 @@ void Dio::run(const std::string source) {
     Parser parser(std::move(tokens));
     std::vector<std::shared_ptr<Stmnt>> statements = parser.parse();
     Debugger::print_ast(statements);
+
+    Compiler compiler;
+    std::shared_ptr<Chunk> chunk = compiler.compile(std::move(statements));
+
+    VM vm;
+    vm.interpret(chunk);
 }
