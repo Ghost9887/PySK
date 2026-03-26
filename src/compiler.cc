@@ -21,31 +21,39 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
     }
 }
 
-void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
+LiteralValue Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
     if (auto e = std::dynamic_pointer_cast<BinaryExpr>(expr)) {
-        evaluate_binary_expression(e);
+        return evaluate_binary_expression(e);
     }else if (auto e = std::dynamic_pointer_cast<UnaryExpr>(expr)) {
-        evaluate_unary_expression(e);
+        return evaluate_unary_expression(e);
+    }else if (auto e = std::dynamic_pointer_cast<LiteralExpr>(expr)) {
+        return evaluate_literal_expression(e);
     }
+
+    return std::monostate();
 }
 
-void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
-    LiteralValue value = get_value(expr->right);
+LiteralValue Compiler::evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr) {
+    return expr->literal;
+}
 
+LiteralValue Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
+    LiteralValue value = evaluate_expression(expr->right);
     switch (expr->op.type) {
         case T_MINUS:
             if (is_value(value)) {
-                emit_value(std::get<Value>(value), get_line(expr->op));
-                emit_byte(OP_NEGATE, get_line(expr->op));
+                return std::get<Value>(value);
             }
             break;
         default: break;
     }
+
+    return std::monostate();
 }
 
-void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
-    LiteralValue a = get_value(expr->left);
-    LiteralValue b = get_value(expr->right);
+LiteralValue Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
+    LiteralValue a = evaluate_expression(expr->left);
+    LiteralValue b = evaluate_expression(expr->right);
     Byte code;
 
     switch (expr->op.type) {
@@ -107,6 +115,8 @@ void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
     }
 
     emit_binary_expr(std::get<Value>(a), std::get<Value>(b), code, get_line(expr->op));
+
+    return std::monostate();
 }
 
 LiteralValue Compiler::get_value(std::shared_ptr<Expr> expr) {
