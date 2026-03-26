@@ -18,6 +18,7 @@ private:
     void evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr);
     void evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr);
     void evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr);
+    void evaluate_grouping_expression(std::shared_ptr<GroupingExpr> expr);
     bool is_value(LiteralValue literal);
     int get_line(Token &token);
     void emit_byte(Byte byte, int line);
