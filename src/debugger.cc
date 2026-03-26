@@ -35,8 +35,15 @@ int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
         case OP_MULTIPLY: return Debugger::print_simple_instruction("OP_MULTIPLY", offset);
         case OP_DIVIDE: return Debugger::print_simple_instruction("OP_DIVIDE", offset);
         case OP_NEGATE: return Debugger::print_simple_instruction("OP_NEGATE", offset);
-        case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
+        case OP_COMPARE_EQUAL: return Debugger::print_simple_instruction("OP_COMPARE_EQUAL", offset);
+        case OP_COMPARE_UNEQUAL: return Debugger::print_simple_instruction("OP_COMPARE_UNEQUAL", offset);
+        case OP_GREATER: return Debugger::print_simple_instruction("OP_GREATER", offset);
+        case OP_GREATER_EQUAL: return Debugger::print_simple_instruction("OP_GREATER_EQUAL", offset);
+        case OP_LESS: return Debugger::print_simple_instruction("OP_LESS", offset);
+        case OP_LESS_EQUAL: return Debugger::print_simple_instruction("OP_LESS_EQUAL", offset);
         case OP_CONSTANT: return Debugger::print_constant_instruction("OP_CONSTANT", chunk, offset);
+        case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
+        case OP_END: return Debugger::print_simple_instruction("OP_END", offset);
         default: 
             std::cout << "Uknown byte" << '\n';
             return ++offset;
@@ -62,4 +69,10 @@ void Debugger::print_ast(std::vector<std::shared_ptr<Stmnt>> statements) {
     }
 
     std::cout << '\n';
+}
+
+void Debugger::print_stack(std::vector<Value> &stack) {
+    for (Value v : stack) {
+        std::cout << "----" << v << "----" << '\n';
+    }
 }

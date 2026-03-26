@@ -14,14 +14,11 @@ private:
     std::shared_ptr<Chunk> chunk;
 private:
     void evaluate(std::shared_ptr<Stmnt> stmnt);
-    LiteralValue evaluate_expression(std::shared_ptr<Expr> expr);
-    LiteralValue evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr);
-    LiteralValue evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr);
-    LiteralValue evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr);
-    LiteralValue get_value(std::shared_ptr<Expr> expr);
-    bool is_value(LiteralValue value);
-    bool is_bool(LiteralValue value);
-    void emit_binary_expr(Value value1, Value value2, Byte byte, int line);
+    void evaluate_expression(std::shared_ptr<Expr> expr);
+    void evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr);
+    void evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr);
+    void evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr);
+    bool is_value(LiteralValue literal);
     int get_line(Token &token);
     void emit_byte(Byte byte, int line);
     void emit_value(Value value, int line);

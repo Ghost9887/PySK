@@ -21,128 +21,55 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
     }
 }
 
-LiteralValue Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
+void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
     if (auto e = std::dynamic_pointer_cast<BinaryExpr>(expr)) {
-        return evaluate_binary_expression(e);
+        evaluate_binary_expression(e);
     }else if (auto e = std::dynamic_pointer_cast<UnaryExpr>(expr)) {
-        return evaluate_unary_expression(e);
+        evaluate_unary_expression(e);
     }else if (auto e = std::dynamic_pointer_cast<LiteralExpr>(expr)) {
-        return evaluate_literal_expression(e);
+        evaluate_literal_expression(e);
     }
 
-    return std::monostate();
 }
 
-LiteralValue Compiler::evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr) {
-    return expr->literal;
-}
-
-LiteralValue Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
-    LiteralValue value = evaluate_expression(expr->right);
-    switch (expr->op.type) {
-        case T_MINUS:
-            if (is_value(value)) {
-                return std::get<Value>(value);
-            }
-            break;
-        default: break;
-    }
-
-    return std::monostate();
-}
-
-LiteralValue Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
-    LiteralValue a = evaluate_expression(expr->left);
-    LiteralValue b = evaluate_expression(expr->right);
-    Byte code;
+void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
+    evaluate_expression(expr->left);
+    evaluate_expression(expr->right);
 
     switch (expr->op.type) {
-        case T_PLUS:
-            if (is_value(a) && is_value(b)) code = OP_ADD;
-            break;
-        case T_MINUS:
-            if (is_value(a) && is_value(b)) code = OP_MINUS;
-            break;
-        case T_STAR: 
-            if (is_value(a) && is_value(b)) code = OP_MULTIPLY;
-            break;
-        case T_SLASH: 
-            if (is_value(a) && is_value(b)) code = OP_DIVIDE;
-            break;
-        case T_EQUAL_EQUAL: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) == std::get<Value>(b)) code = OP_TRUE;
-                else code = OP_FALSE;
-            }
-            break;
-        }
-        case T_BANG_EQUAL: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) == std::get<Value>(b)) code = OP_FALSE;
-                else code = OP_TRUE;
-            }
-            break;
-        }
-        case T_GREATER: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) > std::get<Value>(b)) code = OP_TRUE;
-                else code = OP_FALSE;
-            }
-            break;
-        }
-        case T_GREATER_EQUAL: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) >= std::get<Value>(b)) code = OP_TRUE;
-                else code = OP_FALSE;
-            }
-            break;
-        }
-        case T_LESS: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) < std::get<Value>(b)) code = OP_TRUE;
-                else code = OP_FALSE;
-            }
-            break;
-        }
-        case T_LESS_EQUAL: {
-            if (is_value(a) && is_value(b)) {
-                if (std::get<Value>(a) <= std::get<Value>(b)) code = OP_TRUE;
-                else code = OP_FALSE;
-            }
-            break;
-        }
+        case T_PLUS: emit_byte(OP_ADD, get_line(expr->op)); break;
+        case T_MINUS: emit_byte(OP_MINUS, get_line(expr->op)); break;
+        case T_STAR: emit_byte(OP_MULTIPLY, get_line(expr->op)); break; 
+        case T_SLASH: emit_byte(OP_DIVIDE, get_line(expr->op)); break; 
+        case T_BANG_EQUAL: emit_byte(OP_COMPARE_UNEQUAL, get_line(expr->op)); break;
+        case T_EQUAL_EQUAL: emit_byte(OP_COMPARE_EQUAL, get_line(expr->op)); break;
+        case T_GREATER: emit_byte(OP_GREATER, get_line(expr->op)); break;
+        case T_GREATER_EQUAL: emit_byte(OP_GREATER_EQUAL, get_line(expr->op)); break;
+        case T_LESS: emit_byte(OP_LESS, get_line(expr->op)); break;
+        case T_LESS_EQUAL: emit_byte(OP_LESS_EQUAL, get_line(expr->op)); break; 
         defualt: break;
     }
-
-    emit_binary_expr(std::get<Value>(a), std::get<Value>(b), code, get_line(expr->op));
-
-    return std::monostate();
 }
 
-LiteralValue Compiler::get_value(std::shared_ptr<Expr> expr) {
-    if (auto e = std::dynamic_pointer_cast<LiteralExpr>(expr)) {
-        return e->literal;
+void Compiler::evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr) {
+    //TODO: add line to literal expr
+    if (is_value(expr->literal)) emit_value(std::get<Value>(expr->literal), 0);
+}
+
+void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
+    evaluate_expression(expr->right);
+    switch (expr->op.type) {
+        case T_MINUS: emit_byte(OP_NEGATE, get_line(expr->op)); break;
+        default: break;
     }
-
-    return std::monostate();
 }
 
-bool Compiler::is_value(LiteralValue value) {
-    return std::holds_alternative<Value>(value);
-}
-
-bool Compiler::is_bool(LiteralValue value) {
-    return std::holds_alternative<bool>(value);
+bool Compiler::is_value(LiteralValue literal) {
+    return std::holds_alternative<Value>(literal);
 }
 
 int Compiler::get_line(Token &token) {
     return token.line;
-}
-
-void Compiler::emit_binary_expr(Value value1, Value value2, Byte byte, int line) {
-    emit_value(value1, line);
-    emit_value(value2, line);
-    emit_byte(byte, line);
 }
 
 void Compiler::emit_byte(Byte byte, int line) {

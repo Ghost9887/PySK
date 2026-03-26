@@ -13,6 +13,8 @@ void Dio::run(const std::string source) {
     Compiler compiler;
     std::shared_ptr<Chunk> chunk = compiler.compile(std::move(statements));
 
+    Debugger::print_chunk(chunk);
+
     VM vm;
     vm.interpret(chunk);
 }

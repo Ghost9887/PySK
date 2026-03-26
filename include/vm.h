@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include "chunk.h"
+#include "debugger.h"
 
 typedef enum {
     INTERPRET_OK,
@@ -25,6 +26,7 @@ private:
     Value read_constant();
     Value pop(); 
     Value binary_op(char op);
+    Value compare_op(std::string op);
 private:
     std::vector<Value> stack;
     int ip;

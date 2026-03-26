@@ -14,6 +14,7 @@ public:
     ~Debugger() = default;
     static void print_tokens(std::vector<Token> tokens);
     static void print_ast(std::vector<std::shared_ptr<Stmnt>> statements);
+    static void print_stack(std::vector<Value> &stack);
     static void print_chunk(std::shared_ptr<Chunk> chunk);
     static int print_instruction(std::shared_ptr<Chunk> chunk, int offset);
     static int print_simple_instruction(const std::string name, int offset);
