@@ -48,7 +48,7 @@ void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
         case T_GREATER_EQUAL: emit_byte(OP_GREATER_EQUAL, get_line(expr->op)); break;
         case T_LESS: emit_byte(OP_LESS, get_line(expr->op)); break;
         case T_LESS_EQUAL: emit_byte(OP_LESS_EQUAL, get_line(expr->op)); break; 
-        defualt: break;
+        default: break;
     }
 }
 
