@@ -14,6 +14,7 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
 }
 
 std::shared_ptr<Stmnt> Parser::statement() {
+    if (match(T_VYTLAC)) return std::make_shared<PrintStmnt>(expression());
     return std::make_shared<ExpressionStmnt>(expression());
 }
 

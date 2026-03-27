@@ -15,13 +15,14 @@ typedef enum {
     OP_DIVIDE,
     OP_NEGATE,
     OP_CONSTANT,
-    OP_RETURN,
     OP_COMPARE_EQUAL,
     OP_COMPARE_UNEQUAL,
     OP_GREATER,
     OP_GREATER_EQUAL,
     OP_LESS,
     OP_LESS_EQUAL,
+    OP_PRINT,
+    OP_RETURN,
     OP_END,
 }OpCode;
 

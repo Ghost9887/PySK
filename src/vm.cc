@@ -19,7 +19,8 @@ InterpretResult VM::run() {
             case OP_LESS: stack.push_back(compare_op("<")); break;
             case OP_LESS_EQUAL: stack.push_back(compare_op("<=")); break;
             case OP_CONSTANT: stack.push_back(read_constant()); break;
-            case OP_RETURN: std::cout << pop() << '\n'; break;
+            case OP_PRINT: std::cout << pop() << '\n'; break;
+            case OP_RETURN: std::cout << "Return" << '\n'; break;
             case OP_END: return INTERPRET_OK;
             default:
                 std::cout << "COMPILER ERROR" << '\n';

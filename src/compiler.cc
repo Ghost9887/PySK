@@ -7,7 +7,6 @@ std::shared_ptr<Chunk> Compiler::compile(std::vector<std::shared_ptr<Stmnt>> sta
     std::cout << "Chunk Size: " << statements.size() << '\n';
     for (int i = 0; i < statements.size(); i++) {
         evaluate(statements.at(i));
-        chunk->write_chunk(OP_RETURN, 0);
     }
     chunk->write_chunk(OP_END, 0);
     return chunk;
@@ -16,7 +15,11 @@ std::shared_ptr<Chunk> Compiler::compile(std::vector<std::shared_ptr<Stmnt>> sta
 void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
     if (auto s = std::dynamic_pointer_cast<ExpressionStmnt>(stmnt)) {
         evaluate_expression(s->expr);
-    }else {
+    }else if (auto s = std::dynamic_pointer_cast<PrintStmnt>(stmnt)) {
+        evaluate_expression(s->expr);
+        emit_byte(OP_PRINT, 0);
+    }
+    else {
         std::cout << "false" << '\n';
     }
 }

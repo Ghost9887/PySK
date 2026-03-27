@@ -18,4 +18,12 @@ public:
     std::string to_string() override;
 };
 
+class PrintStmnt : public Stmnt {
+public:
+    std::shared_ptr<Expr> expr;
+public:
+    PrintStmnt(std::shared_ptr<Expr> expr);
+    std::string to_string() override;
+};
+
 #endif
