@@ -23,12 +23,12 @@ private:
     std::shared_ptr<Expr> primary();
     TokenType peek_type();
     Token peek();
-    void advance(); 
     template<typename... TokenTypes>
     bool match(TokenTypes... types);
+    void advance();
     void consume(TokenType type, std::string message);
     bool is_at_end();
-    void error(std::string message);
+    void error(const std::string message);
 private:
     std::vector<Token> tokens;
     int ip;

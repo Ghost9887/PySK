@@ -1,7 +1,5 @@
 #include "parser.h"
 
-//TODO: fix errors
-
 Parser::Parser(std::vector<Token> tokens) :
     tokens(tokens), ip(0), had_error(false) {}
 
@@ -20,7 +18,7 @@ std::shared_ptr<Stmnt> Parser::statement() {
 
 std::shared_ptr<Expr> Parser::expression() {
     std::shared_ptr<Expr> expr = binary();
-    consume(T_SEMICOLON, "Ocakvany ';'.");
+    consume(T_SEMICOLON, "Ocakavany ';'.");
     return expr;
 }
 
@@ -91,7 +89,7 @@ std::shared_ptr<Expr> Parser::primary() {
 
     if (match(T_LPAREN)) {
         std::shared_ptr<Expr> expr = binary();
-        consume(T_RPAREN, "Ocakvany ')'.");
+        consume(T_RPAREN, "Ocakavany ')'.");
         return std::make_shared<GroupingExpr>(expr);
     }
 
@@ -112,7 +110,7 @@ void Parser::advance() {
 
 template<typename... TokenTypes>
 bool Parser::match(TokenTypes... types) {
-    if (is_at_end()) error("Neocakvany koniec vyrazu.");
+    if (is_at_end()) error("Neocakavany koniec vyrazu.");
     for (TokenType type : {types...}) {
         if (peek_type() == type){ 
             advance();
@@ -133,6 +131,6 @@ bool Parser::is_at_end() {
     return ip >= tokens.size();
 }
 
-void Parser::error(std::string message) {
+void Parser::error(const std::string message) {
     throw ParseError(message);
 }
