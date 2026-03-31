@@ -1,6 +1,6 @@
-#include "dio.h"
+#include "pysk.h"
 
-void Dio::run(const std::string source) {
+void Pysk::run(const std::string source) {
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.tokenize();
 

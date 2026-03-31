@@ -1,5 +1,5 @@
-#ifndef DIO_H
-#define DIO_H
+#ifndef PYSK_H
+#define PYSK_H
 
 #include <iostream>
 #include "scanner.h"
@@ -8,10 +8,10 @@
 #include "compiler.h"
 #include "vm.h"
 
-class Dio {
+class Pysk {
 public: 
-    Dio() = default;
-    ~Dio() = default;
+    Pysk() = default;
+    ~Pysk() = default;
     static void run(const std::string source);
 };
 
