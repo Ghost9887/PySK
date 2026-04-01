@@ -7,18 +7,25 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
     std::vector<std::shared_ptr<Stmnt>> statements;
     while (!is_at_end()) {
         statements.push_back(statement());
+        consume(T_SEMICOLON, "Ocakavany ';'.");
     }
     return statements;
 }
 
 std::shared_ptr<Stmnt> Parser::statement() {
-    if (match(T_VYTLAC)) return std::make_shared<PrintStmnt>(expression());
+    if (match(T_VYTLAC)) return print_stmnt();
     return std::make_shared<ExpressionStmnt>(expression());
+}
+
+std::shared_ptr<Stmnt> Parser::print_stmnt() {
+    consume(T_LPAREN, "Ocakavany '('.");
+    std::shared_ptr<Expr> expr = expression();
+    consume(T_RPAREN, "Ocakavany ')'.");
+    return std::make_shared<PrintStmnt>(expr);
 }
 
 std::shared_ptr<Expr> Parser::expression() {
     std::shared_ptr<Expr> expr = binary();
-    consume(T_SEMICOLON, "Ocakavany ';'.");
     return expr;
 }
 

@@ -13,6 +13,7 @@ public:
     std::vector<std::shared_ptr<Stmnt>> parse();
 private:
     std::shared_ptr<Stmnt> statement();
+    std::shared_ptr<Stmnt> print_stmnt();
     std::shared_ptr<Expr> expression();
     std::shared_ptr<Expr> binary();
     std::shared_ptr<Expr> equality();
