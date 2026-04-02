@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(pysk)
+project(dio)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
@@ -15,24 +15,24 @@ file(GLOB_RECURSE TESTS
     ${CMAKE_SOURCE_DIR}/tests/*.cc
 )
 
-add_library(pysk_lib ${LIB_SOURCES})
+add_library(dio_lib ${LIB_SOURCES})
 
-target_include_directories(pysk_lib
+target_include_directories(dio_lib
     PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )
 
-add_executable(pysk src/main.cc)
+add_executable(dio src/main.cc)
 
-target_link_libraries(pysk
-    PRIVATE pysk_lib
+target_link_libraries(dio
+    PRIVATE dio_lib
 )
 
-add_executable(pysk_tests ${TESTS})
+add_executable(dio_tests ${TESTS})
 
-target_link_libraries(pysk_tests
+target_link_libraries(dio_tests
     PRIVATE
-    pysk_lib
+    dio_lib
     Catch2::Catch2WithMain
 )
 

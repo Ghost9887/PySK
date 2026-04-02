@@ -1,6 +1,6 @@
-#include "pysk.h"
+#include "dio.h"
 
-void Pysk::run(const std::string source) {
+void Dio::run(const std::string source) {
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.tokenize();
 
@@ -21,7 +21,7 @@ void Pysk::run(const std::string source) {
     }
 }
 
-void Pysk::error(const std::string message, int line, ErrorType type) {
+void Dio::error(const std::string message, int line, ErrorType type) {
     had_error = true;
     
     if (type == PARSE_ERROR) {

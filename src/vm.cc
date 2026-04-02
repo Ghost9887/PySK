@@ -1,5 +1,5 @@
 #include "vm.h"
-#include "pysk.h"
+#include "dio.h"
 
 VM::VM() : 
     chunk(nullptr), ip(0), stack(), globals() {}
@@ -181,7 +181,7 @@ bool VM::is_null(LiteralValue value) {
 
 void VM::error(const std::string message) {
     int line = Debugger::get_line(chunk, ip);
-    Pysk::error(message, line, RUNTIME_ERROR);
+    Dio::error(message, line, RUNTIME_ERROR);
 }
 
 InterpretResult VM::interpret(std::shared_ptr<Chunk> chunk) {

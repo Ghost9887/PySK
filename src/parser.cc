@@ -1,5 +1,5 @@
 #include "parser.h"
-#include "pysk.h"
+#include "dio.h"
 
 Parser::Parser(std::vector<Token> tokens) :
     tokens(tokens), ip(0), had_error(false) {}
@@ -158,6 +158,6 @@ bool Parser::is_at_end() {
 }
 
 void Parser::error(const std::string message) {
-    Pysk::error(message, peek().line - 1, PARSE_ERROR);
+    Dio::error(message, peek().line - 1, PARSE_ERROR);
     throw ParseError("");
 }

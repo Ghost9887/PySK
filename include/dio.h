@@ -1,5 +1,5 @@
-#ifndef PYSK_H
-#define PYSK_H
+#ifndef DIO_H
+#define DIO_H
 
 #include <iostream>
 #include "scanner.h"
@@ -13,10 +13,10 @@ typedef enum {
     RUNTIME_ERROR, 
 }ErrorType;
 
-class Pysk {
+class Dio {
 public: 
-    Pysk() = default;
-    ~Pysk() = default;
+    Dio() = default;
+    ~Dio() = default;
     static void run(const std::string source);
     static void error(const std::string message, int line, ErrorType type);
 private:
