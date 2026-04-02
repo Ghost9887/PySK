@@ -10,6 +10,13 @@ int Debugger::get_line(std::shared_ptr<Chunk> chunk, int offset) {
     return -1;
 }
 
+int Debugger::print_jump_instruction(const std::string name, std::shared_ptr<Chunk> chunk, int offset) {
+    std::cout << "  " << name;
+    int jump_count = get_line(chunk, offset);
+    std::cout << "  " << jump_count << '\n';
+    return offset + 2;
+}
+
 int Debugger::print_simple_instruction(const std::string name, int offset) {
     std::cout << "  " << name << '\n';
     return ++offset;
@@ -45,6 +52,8 @@ int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
         case OP_PRINT: return Debugger::print_simple_instruction("OP_PRINT", offset);
         case OP_DEFINE_GLOBAL: return Debugger::print_simple_instruction("OP_DEFINE_GLOBAL", offset);
         case OP_GET_GLOBAL: return Debugger::print_simple_instruction("OP_GET_GLOBAL", offset);
+        case OP_IF: return Debugger::print_simple_instruction("OP_IF", offset);
+        case OP_JUMP: return Debugger::print_jump_instruction("OP_JUMP", chunk, offset);
         case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
         case OP_END: return Debugger::print_simple_instruction("OP_END", offset);
         default: 

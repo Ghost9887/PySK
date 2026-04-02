@@ -15,6 +15,20 @@ void Pysk::run(const std::string source) {
 
     Debugger::print_chunk(chunk);
 
-    VM vm;
-    vm.interpret(chunk);
+    if (!had_error) {
+        VM vm;
+        vm.interpret(chunk);
+    }
+}
+
+void Pysk::error(const std::string message, int line, ErrorType type) {
+    had_error = true;
+    
+    if (type == PARSE_ERROR) {
+        std::cout << "PARSE_ERROR ";
+    }else {
+        std::cout << "RUNTIME_ERROR ";
+    }
+
+    std::cout << "at [riadok: " << line << "], what: " << message << '\n'; 
 }

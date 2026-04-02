@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "pysk.h"
 
 Parser::Parser(std::vector<Token> tokens) :
     tokens(tokens), ip(0), had_error(false) {}
@@ -15,7 +16,16 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
 std::shared_ptr<Stmnt> Parser::statement() {
     if (match(T_VYTLAC)) return print_stmnt();
     else if (match(T_LET)) return declaration_stmnt();
-    return std::make_shared<ExpressionStmnt>(expression());
+    else if (match(T_AK)) return if_stmnt();
+    return std::make_shared<ExpressionStmnt>(expression(), peek().line);
+}
+
+std::shared_ptr<Stmnt> Parser::if_stmnt() {
+    consume(T_LPAREN, "Ocakavany '('.");
+    std::shared_ptr<Expr> expr = expression();
+    consume(T_RPAREN, "Ocakavany ')'.");
+    std::shared_ptr<Stmnt> body = statement();
+    return std::make_shared<IfStmnt>(expr, body, peek().line);
 }
 
 std::shared_ptr<Stmnt> Parser::declaration_stmnt() {
@@ -23,14 +33,14 @@ std::shared_ptr<Stmnt> Parser::declaration_stmnt() {
     advance();
     consume(T_EQUAL, "Ocakavany '='.");
     std::shared_ptr<Expr> expr = expression();
-    return std::make_shared<DeclStmnt>(name, expr);
+    return std::make_shared<DeclStmnt>(name, expr, peek().line);
 }
 
 std::shared_ptr<Stmnt> Parser::print_stmnt() {
     consume(T_LPAREN, "Ocakavany '('.");
     std::shared_ptr<Expr> expr = expression();
     consume(T_RPAREN, "Ocakavany ')'.");
-    return std::make_shared<PrintStmnt>(expr);
+    return std::make_shared<PrintStmnt>(expr, peek().line);
 }
 
 std::shared_ptr<Expr> Parser::expression() {
@@ -100,11 +110,10 @@ std::shared_ptr<Expr> Parser::unary() {
 }
 
 std::shared_ptr<Expr> Parser::primary() {
-    if (match(T_NUMBER)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
-    else if (match(T_PRAVDA) || match(T_NEPRAVDA)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
-    else if (match(T_STRING)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
-    else if (match(T_IDENTIFIER)) return std::make_shared<CallExpr>(tokens.at(ip - 1).lexeme);
-    if (match(T_LPAREN)) {
+    if (match(T_NUMBER, T_PRAVDA, T_NEPRAVDA, T_STRING)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal, peek().line);
+    else if (match(T_IDENTIFIER)) return std::make_shared<CallExpr>(tokens.at(ip - 1).lexeme, peek().line);
+
+    else if (match(T_LPAREN)) {
         std::shared_ptr<Expr> expr = binary();
         consume(T_RPAREN, "Ocakavany ')'.");
         return std::make_shared<GroupingExpr>(expr);
@@ -149,5 +158,6 @@ bool Parser::is_at_end() {
 }
 
 void Parser::error(const std::string message) {
-    throw ParseError(message);
+    Pysk::error(message, peek().line - 1, PARSE_ERROR);
+    throw ParseError("");
 }

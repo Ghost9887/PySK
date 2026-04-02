@@ -13,8 +13,8 @@ std::string UnaryExpr::to_string() {
     return "UnaryExpr {" + tokens_map.at(op.type) + ", " + right->to_string() + "}";
 }
 
-LiteralExpr::LiteralExpr(LiteralValue literal) :
-    literal(literal) {}
+LiteralExpr::LiteralExpr(LiteralValue literal, int line) :
+    literal(literal), line(line) {}
 std::string LiteralExpr::to_string() {
     return "LiteralExpr {" + Debugger::literal_to_string(literal) + "}";
 }
@@ -25,8 +25,8 @@ std::string GroupingExpr::to_string() {
     return "GroupingExpr {" + expression->to_string() + " }";
 }
 
-CallExpr::CallExpr(std::string name) :
-    name(name) {}
+CallExpr::CallExpr(std::string name, int line) :
+    name(name), line(line) {}
 std::string CallExpr::to_string() {
     return "CallExpr {" + name + " }";
 }

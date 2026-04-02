@@ -16,6 +16,7 @@ private:
     void evaluate(std::shared_ptr<Stmnt> stmnt);
     void evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt);
     void evaluate_decl_stmnt(std::shared_ptr<DeclStmnt> stmnt);
+    void evaluate_if_stmnt(std::shared_ptr<IfStmnt> stmnt);
     void evaluate_expression(std::shared_ptr<Expr> expr);
     void evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr);
     void evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr);

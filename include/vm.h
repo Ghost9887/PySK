@@ -30,11 +30,14 @@ private:
     LiteralValue compare_op(std::string op);
     LiteralValue negate(LiteralValue value);
     LiteralValue get_global();
+    void jump();
+    void if_stmnt();
     void define_global();
     bool is_number(LiteralValue value);
     bool is_bool(LiteralValue value);
     bool is_string(LiteralValue value);
     bool is_null(LiteralValue value);
+    void error(const std::string message);
 private:
     std::vector<LiteralValue> stack;
     int ip;

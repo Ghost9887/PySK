@@ -34,8 +34,9 @@ public:
 class LiteralExpr : public Expr {
 public:
     LiteralValue literal;
+    int line;
 public:
-    LiteralExpr(LiteralValue literal);
+    LiteralExpr(LiteralValue literal, int line);
     std::string to_string() override;
 };
 
@@ -50,8 +51,9 @@ public:
 class CallExpr : public Expr {
 public:
     std::string name;
+    int line;
 public:
-    CallExpr(std::string name);
+    CallExpr(std::string name, int line);
     std::string to_string() override;
 };
 

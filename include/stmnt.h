@@ -13,16 +13,18 @@ public:
 class ExpressionStmnt : public Stmnt {
 public:
     std::shared_ptr<Expr> expr;
+    int line;
 public:
-    ExpressionStmnt(std::shared_ptr<Expr> expr);
+    ExpressionStmnt(std::shared_ptr<Expr> expr, int line);
     std::string to_string() override;
 };
 
 class PrintStmnt : public Stmnt {
 public:
     std::shared_ptr<Expr> expr;
+    int line;
 public:
-    PrintStmnt(std::shared_ptr<Expr> expr);
+    PrintStmnt(std::shared_ptr<Expr> expr, int line);
     std::string to_string() override;
 };
 
@@ -30,8 +32,19 @@ class DeclStmnt : public Stmnt {
 public:
     std::string name;
     std::shared_ptr<Expr> expr;
+    int line;
 public:
-    DeclStmnt(std::string name, std::shared_ptr<Expr> expr);
+    DeclStmnt(std::string name, std::shared_ptr<Expr> expr, int line);
+    std::string to_string() override;
+};
+
+class IfStmnt : public Stmnt {
+public:
+    std::shared_ptr<Expr> expr;
+    std::shared_ptr<Stmnt> body;
+    int line;
+public:
+    IfStmnt(std::shared_ptr<Expr> expr, std::shared_ptr<Stmnt> body, int line);
     std::string to_string() override;
 };
 

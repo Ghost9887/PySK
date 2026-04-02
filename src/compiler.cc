@@ -19,21 +19,32 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
         evaluate_print_stmnt(s);
     }else if (auto s = std::dynamic_pointer_cast<DeclStmnt>(stmnt)) {
         evaluate_decl_stmnt(s);
+    }else if (auto s = std::dynamic_pointer_cast<IfStmnt>(stmnt)) {
+        evaluate_if_stmnt(s);
     }
     else {
         std::cout << "false" << '\n';
     }
 }
 
+//ak(5 == 5) vytlac(pravda);
+
+void Compiler::evaluate_if_stmnt(std::shared_ptr<IfStmnt> stmnt) {
+    evaluate_expression(stmnt->expr);
+    emit_byte(OP_IF, stmnt->line);
+    emit_byte(OP_JUMP, 0);
+    evaluate(stmnt->body);
+}
+
 void Compiler::evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt) {
     evaluate_expression(stmnt->expr);
-    emit_byte(OP_PRINT, 0);
+    emit_byte(OP_PRINT, stmnt->line);
 }
 
 void Compiler::evaluate_decl_stmnt(std::shared_ptr<DeclStmnt> stmnt) {
     evaluate_expression(stmnt->expr);
-    emit_value(stmnt->name, 0);
-    emit_byte(OP_DEFINE_GLOBAL, 0);
+    emit_value(stmnt->name, stmnt->line);
+    emit_byte(OP_DEFINE_GLOBAL, stmnt->line);
 }
 
 void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
@@ -51,8 +62,8 @@ void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
 }
 
 void Compiler::evaluate_call_expression(std::shared_ptr<CallExpr> expr) {
-    emit_value(expr->name, 0);
-    emit_byte(OP_GET_GLOBAL, 0);
+    emit_value(expr->name, expr->line);
+    emit_byte(OP_GET_GLOBAL, expr->line);
 }
 
 void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {
@@ -84,7 +95,7 @@ void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
 }
 
 void Compiler::evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr) {
-    emit_value(expr->literal, 0);
+    emit_value(expr->literal, expr->line);
 }
 
 void Compiler::evaluate_grouping_expression(std::shared_ptr<GroupingExpr> expr) {
