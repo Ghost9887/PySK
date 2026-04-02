@@ -25,7 +25,12 @@ std::shared_ptr<Stmnt> Parser::if_stmnt() {
     std::shared_ptr<Expr> expr = expression();
     consume(T_RPAREN, "Ocakavany ')'.");
     std::shared_ptr<Stmnt> body = statement();
-    return std::make_shared<IfStmnt>(expr, body, peek().line);
+    if (match(T_INAK)) {
+        std::shared_ptr<Stmnt> else_body = statement();
+        return std::make_shared<IfStmnt>(expr, body, else_body, peek().line);
+    }
+
+    return std::make_shared<IfStmnt>(expr, body, std::nullopt, peek().line);
 }
 
 std::shared_ptr<Stmnt> Parser::declaration_stmnt() {

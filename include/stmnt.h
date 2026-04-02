@@ -2,6 +2,7 @@
 #define STMNT_H
 
 #include <memory>
+#include <optional>
 #include "expr.h"
 
 class Stmnt {
@@ -42,9 +43,11 @@ class IfStmnt : public Stmnt {
 public:
     std::shared_ptr<Expr> expr;
     std::shared_ptr<Stmnt> body;
+    std::optional<std::shared_ptr<Stmnt>> else_body;
     int line;
 public:
-    IfStmnt(std::shared_ptr<Expr> expr, std::shared_ptr<Stmnt> body, int line);
+    IfStmnt(std::shared_ptr<Expr> expr, std::shared_ptr<Stmnt> body, 
+            std::optional<std::shared_ptr<Stmnt>> else_body, int line);
     std::string to_string() override;
 };
 

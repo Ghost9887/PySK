@@ -33,10 +33,13 @@ void Compiler::evaluate_if_stmnt(std::shared_ptr<IfStmnt> stmnt) {
     evaluate_expression(stmnt->expr);
     emit_byte(OP_IF, stmnt->line);
     emit_byte(OP_JUMP, stmnt->line);
+
     int org_size = chunk->codes.size();
     evaluate(stmnt->body);
     int new_size = chunk->codes.size() - org_size;
     emit_jump(new_size);
+
+    //TODO: else statement
 }
 
 void Compiler::evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt) {
