@@ -36,10 +36,12 @@ public:
     ~Chunk() = default;
     void write_chunk(Byte byte, int line);
     void write_constant(LiteralValue value, int line);
+    void write_jump(int amount);
 public:
     std::vector<Byte> codes;
     std::vector<int> lines;
     std::unique_ptr<Values> constants;
+    std::vector<int> jumps;
 };
 
 #endif

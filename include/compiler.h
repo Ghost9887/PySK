@@ -26,6 +26,7 @@ private:
     int get_line(Token &token);
     void emit_byte(Byte byte, int line);
     void emit_value(LiteralValue value, int line);
+    void emit_jump(int amount);
 };
 
 #endif

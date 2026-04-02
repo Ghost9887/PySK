@@ -12,9 +12,9 @@ int Debugger::get_line(std::shared_ptr<Chunk> chunk, int offset) {
 
 int Debugger::print_jump_instruction(const std::string name, std::shared_ptr<Chunk> chunk, int offset) {
     std::cout << "  " << name;
-    int jump_count = get_line(chunk, offset);
+    int jump_count = chunk->jumps.back();
     std::cout << "  " << jump_count << '\n';
-    return offset + 2;
+    return ++offset;
 }
 
 int Debugger::print_simple_instruction(const std::string name, int offset) {

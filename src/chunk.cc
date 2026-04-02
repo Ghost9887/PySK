@@ -1,7 +1,7 @@
 #include "chunk.h"
 
 Chunk::Chunk() :
-    codes(), constants(std::make_unique<Values>()) {}
+    codes(), constants(std::make_unique<Values>()), jumps() {}
 
 void Chunk::write_chunk(Byte byte, int line) {
     codes.push_back(byte);
@@ -26,4 +26,8 @@ void Chunk::write_constant(LiteralValue value, int line) {
     }else {
         //TODO: add support for more values 
     }
+}
+
+void Chunk::write_jump(int amount) {
+    jumps.push_back(amount);
 }

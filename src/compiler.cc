@@ -32,8 +32,11 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
 void Compiler::evaluate_if_stmnt(std::shared_ptr<IfStmnt> stmnt) {
     evaluate_expression(stmnt->expr);
     emit_byte(OP_IF, stmnt->line);
-    emit_byte(OP_JUMP, 0);
+    emit_byte(OP_JUMP, stmnt->line);
+    int org_size = chunk->codes.size();
     evaluate(stmnt->body);
+    int new_size = chunk->codes.size() - org_size;
+    emit_jump(new_size);
 }
 
 void Compiler::evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt) {
@@ -112,4 +115,8 @@ void Compiler::emit_byte(Byte byte, int line) {
 
 void Compiler::emit_value(LiteralValue value, int line) {
     chunk->write_constant(value, line);
+}
+
+void Compiler::emit_jump(int amount) {
+    chunk->write_jump(amount);
 }

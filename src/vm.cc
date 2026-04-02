@@ -36,11 +36,11 @@ InterpretResult VM::run() {
 }
 
 void VM::jump() {
-    int new_ip = Debugger::get_line(chunk, ip++);
-    std::cout << "New IP: " << new_ip << '\n';
-    if (new_ip < chunk->codes.size()) {
-        ip = new_ip;
-    }
+    int new_ip = chunk->jumps.back();
+    if (ip + new_ip < chunk->codes.size()) {
+        ip += new_ip;
+        chunk->jumps.pop_back();
+    }else error("Chyba v skoku.");
 }
 
 

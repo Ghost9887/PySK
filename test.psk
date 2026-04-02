@@ -1,1 +1,5 @@
-ak(pravda) vytlac("hello");
+let a = 6;
+let b = 10;
+
+ak (a + b > 15) vytlac("True");
+ak (a + b < 15) vytlac("False");
