@@ -47,4 +47,12 @@ public:
     std::string to_string() override;
 };
 
+class CallExpr : public Expr {
+public:
+    std::string name;
+public:
+    CallExpr(std::string name);
+    std::string to_string() override;
+};
+
 #endif

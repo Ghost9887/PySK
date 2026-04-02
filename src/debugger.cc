@@ -43,6 +43,8 @@ int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
         case OP_LESS_EQUAL: return Debugger::print_simple_instruction("OP_LESS_EQUAL", offset);
         case OP_CONSTANT: return Debugger::print_constant_instruction("OP_CONSTANT", chunk, offset);
         case OP_PRINT: return Debugger::print_simple_instruction("OP_PRINT", offset);
+        case OP_DEFINE_GLOBAL: return Debugger::print_simple_instruction("OP_DEFINE_GLOBAL", offset);
+        case OP_GET_GLOBAL: return Debugger::print_simple_instruction("OP_GET_GLOBAL", offset);
         case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
         case OP_END: return Debugger::print_simple_instruction("OP_END", offset);
         default: 

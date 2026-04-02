@@ -28,8 +28,10 @@ public:
 
 class DeclStmnt : public Stmnt {
 public:
+    std::string name;
+    std::shared_ptr<Expr> expr;
 public:
-    DeclStmnt(std::shared_ptr<Expr> expr);
+    DeclStmnt(std::string name, std::shared_ptr<Expr> expr);
     std::string to_string() override;
 };
 

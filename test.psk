@@ -1,7 +1,3 @@
-vytlac(pravda == pravda);
-vytlac(5 * 5 == 5 * 5);
-vytlac(!pravda == pravda);
-vytlac("Hello, World!");
-vytlac("Hello, " + "World!");
-vytlac("Hello" * 4);
-vytlac("Hello" == "Hello");
+let b = 10;
+let a = 5;
+vytlac(b + a);

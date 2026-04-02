@@ -19,10 +19,11 @@ std::shared_ptr<Stmnt> Parser::statement() {
 }
 
 std::shared_ptr<Stmnt> Parser::declaration_stmnt() {
-    std::string ident = tokens.at(ip).lexeme;
+    std::string name = tokens.at(ip).lexeme;
+    advance();
     consume(T_EQUAL, "Ocakavany '='.");
     std::shared_ptr<Expr> expr = expression();
-    return nullptr;
+    return std::make_shared<DeclStmnt>(name, expr);
 }
 
 std::shared_ptr<Stmnt> Parser::print_stmnt() {
@@ -102,6 +103,7 @@ std::shared_ptr<Expr> Parser::primary() {
     if (match(T_NUMBER)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
     else if (match(T_PRAVDA) || match(T_NEPRAVDA)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
     else if (match(T_STRING)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
+    else if (match(T_IDENTIFIER)) return std::make_shared<CallExpr>(tokens.at(ip - 1).lexeme);
     if (match(T_LPAREN)) {
         std::shared_ptr<Expr> expr = binary();
         consume(T_RPAREN, "Ocakavany ')'.");

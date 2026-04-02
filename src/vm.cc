@@ -1,7 +1,7 @@
 #include "vm.h"
 
 VM::VM() : 
-    chunk(nullptr), ip(0), stack() {}
+    chunk(nullptr), ip(0), stack(), globals() {}
 
 InterpretResult VM::run() {
     while (true) {
@@ -20,6 +20,8 @@ InterpretResult VM::run() {
             case OP_LESS_EQUAL: stack.push_back(compare_op("<=")); break;
             case OP_CONSTANT: stack.push_back(read_constant()); break;
             case OP_PRINT: std::cout << Debugger::literal_to_string(pop()) << '\n'; break;
+            case OP_DEFINE_GLOBAL: define_global(); break;
+            case OP_GET_GLOBAL: stack.push_back(get_global()); break;
             case OP_RETURN: std::cout << "Return" << '\n'; break;
             case OP_END: return INTERPRET_OK;
             default:
@@ -28,6 +30,25 @@ InterpretResult VM::run() {
         }
     }
     return INTERPRET_COMPILE_ERROR;
+}
+
+LiteralValue VM::get_global() {
+    std::string name = std::get<std::string>(pop());
+    if (globals.find(name) != globals.end()) {
+        return globals.at(name);
+    }
+
+    return std::monostate();
+}
+
+void VM::define_global() {
+    std::string name = std::get<std::string>(pop());
+    LiteralValue value = pop();
+    if (globals.find(name) != globals.end()) {
+        //RUTNIME ERROR SHADOWING ALREADY DECALRED VARIABLE
+    }else {
+        globals.insert({name, value});
+    }
 }
 
 //TODO: RUNTIME ERRORS

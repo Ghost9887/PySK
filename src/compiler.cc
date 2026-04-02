@@ -16,12 +16,24 @@ void Compiler::evaluate(std::shared_ptr<Stmnt> stmnt) {
     if (auto s = std::dynamic_pointer_cast<ExpressionStmnt>(stmnt)) {
         evaluate_expression(s->expr);
     }else if (auto s = std::dynamic_pointer_cast<PrintStmnt>(stmnt)) {
-        evaluate_expression(s->expr);
-        emit_byte(OP_PRINT, 0);
+        evaluate_print_stmnt(s);
+    }else if (auto s = std::dynamic_pointer_cast<DeclStmnt>(stmnt)) {
+        evaluate_decl_stmnt(s);
     }
     else {
         std::cout << "false" << '\n';
     }
+}
+
+void Compiler::evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt) {
+    evaluate_expression(stmnt->expr);
+    emit_byte(OP_PRINT, 0);
+}
+
+void Compiler::evaluate_decl_stmnt(std::shared_ptr<DeclStmnt> stmnt) {
+    evaluate_expression(stmnt->expr);
+    emit_value(stmnt->name, 0);
+    emit_byte(OP_DEFINE_GLOBAL, 0);
 }
 
 void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
@@ -33,7 +45,14 @@ void Compiler::evaluate_expression(std::shared_ptr<Expr> expr) {
         evaluate_literal_expression(e);
     }else if (auto e = std::dynamic_pointer_cast<GroupingExpr>(expr)) {
         evaluate_grouping_expression(e);
+    }else if (auto e = std::dynamic_pointer_cast<CallExpr>(expr)) {
+        evaluate_call_expression(e);
     }
+}
+
+void Compiler::evaluate_call_expression(std::shared_ptr<CallExpr> expr) {
+    emit_value(expr->name, 0);
+    emit_byte(OP_GET_GLOBAL, 0);
 }
 
 void Compiler::evaluate_binary_expression(std::shared_ptr<BinaryExpr> expr) {

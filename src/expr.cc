@@ -24,3 +24,9 @@ GroupingExpr::GroupingExpr(std::shared_ptr<Expr> expression) :
 std::string GroupingExpr::to_string() {
     return "GroupingExpr {" + expression->to_string() + " }";
 }
+
+CallExpr::CallExpr(std::string name) :
+    name(name) {}
+std::string CallExpr::to_string() {
+    return "CallExpr {" + name + " }";
+}
