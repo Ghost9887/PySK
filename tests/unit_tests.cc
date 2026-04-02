@@ -6,7 +6,7 @@
 
 TEST_CASE("Tokenize") {
     std::string source;
-    std::fstream file("../tests/token_test1.psk");
+    std::fstream file("../tests/token_test1.dio");
     std::stringstream buffer;
     buffer << file.rdbuf();
     source = buffer.str();
