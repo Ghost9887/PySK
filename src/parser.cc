@@ -101,6 +101,7 @@ std::shared_ptr<Expr> Parser::unary() {
 std::shared_ptr<Expr> Parser::primary() {
     if (match(T_NUMBER)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
     else if (match(T_PRAVDA) || match(T_NEPRAVDA)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
+    else if (match(T_STRING)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
     if (match(T_LPAREN)) {
         std::shared_ptr<Expr> expr = binary();
         consume(T_RPAREN, "Ocakavany ')'.");

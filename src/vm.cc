@@ -30,42 +30,60 @@ InterpretResult VM::run() {
     return INTERPRET_COMPILE_ERROR;
 }
 
+//TODO: RUNTIME ERRORS
 LiteralValue VM::binary_op(char op) {
     LiteralValue b = pop();
     LiteralValue a = pop();
-    if (std::holds_alternative<double>(b) && std::holds_alternative<double>(a)) {
-        switch (op) {
-            case '+': return std::get<double>(a) + std::get<double>(b); 
-            case '-': return std::get<double>(a) - std::get<double>(b);
-            case '/': return std::get<double>(a) / std::get<double>(b);
-            case '*': return std::get<double>(a) * std::get<double>(b);
+    switch (op) {
+        case '+': 
+            if (is_number(a) && is_number(b)) return std::get<double>(a) + std::get<double>(b); 
+            else if (is_string(a) && is_string(b)) return std::get<std::string>(a) + std::get<std::string>(b);
+        case '-': 
+            if (is_number(a) && is_number(b)) return std::get<double>(a) - std::get<double>(b);
+        case '/': 
+            if (is_number(a) && is_number(b)) return std::get<double>(a) / std::get<double>(b);
+        case '*':{
+            if (is_number(a) && is_number(b)) return std::get<double>(a) * std::get<double>(b);
+            else if (is_string(a) && is_number(b)) { 
+                std::string str;
+                for (int i = 0; i < std::get<double>(b); i++) {
+                    str += std::get<std::string>(a);
+                }
+                return str;
+            }
         }
+        default: break;
     }
+
     return -1.0;
 }
 
+//TODO: RUNTIME ERRROS
 LiteralValue VM::compare_op(std::string op) {
     LiteralValue b = pop();
     LiteralValue a = pop();
     
-    if (std::holds_alternative<double>(b) && std::holds_alternative<double>(a)) {
-        if (op == "==") return std::get<double>(a) == std::get<double>(b);
-        else if (op == "!=") return std::get<double>(a) != std::get<double>(b);
-        else if (op == ">") return std::get<double>(a) > std::get<double>(b);
-        else if (op == ">=") return std::get<double>(a) >= std::get<double>(b);
-        else if (op == "<") return std::get<double>(a) < std::get<double>(b);
-        else return std::get<double>(a) <= std::get<double>(b);
-    }else if (std::holds_alternative<bool>(b) && std::holds_alternative<bool>(b)) {
-        if (op == "==") return std::get<bool>(a) == std::get<bool>(b);
-        else if (op == "!=") return a != b;
+    if (op == "==") {
+        if (is_number(a) && is_number(b)) return std::get<double>(a) == std::get<double>(b);
+        else if (is_bool(a) && is_bool(b)) return std::get<bool>(a) == std::get<bool>(b);
+        else if (is_string(a) && is_string(b)) return std::get<std::string>(a) == std::get<std::string>(b);
     }
-
+    else if (op == "!=") {
+        if (is_number(a) && is_number(b)) return std::get<double>(a) != std::get<double>(b);
+        else if (is_bool(a) && is_bool(b)) return std::get<bool>(a) != std::get<bool>(b);
+        else if (is_string(a) && is_string(b)) return std::get<std::string>(a) != std::get<std::string>(b);
+    }
+    else if (op == ">") if (is_number(a) && is_number(b)) return std::get<double>(a) > std::get<double>(b);
+    else if (op == ">=") if (is_number(a) && is_number(b)) return std::get<double>(a) >= std::get<double>(b);
+    else if (op == "<") if (is_number(a) && is_number(b)) return std::get<double>(a) < std::get<double>(b);
+    else if (is_number(a) && is_number(b)) return std::get<double>(a) <= std::get<double>(b);
+    
     return std::monostate();
 }
 
 LiteralValue VM::negate(LiteralValue value) {
-    if (std::holds_alternative<double>(value)) return -std::get<double>(value);
-    else if (std::holds_alternative<bool>(value)) return !std::get<bool>(value);
+    if (is_number(value)) return -std::get<double>(value);
+    else if (is_bool(value)) return !std::get<bool>(value);
     else return std::monostate();
 }
 
@@ -82,6 +100,22 @@ LiteralValue VM::pop() {
     LiteralValue value = stack.back();
     stack.pop_back();
     return value;
+}
+
+bool VM::is_number(LiteralValue value) {
+    return std::holds_alternative<double>(value);
+} 
+
+bool VM::is_bool(LiteralValue value) {
+    return std::holds_alternative<bool>(value);
+}
+
+bool VM::is_string(LiteralValue value) {
+    return std::holds_alternative<std::string>(value);
+}
+
+bool VM::is_null(LiteralValue value) {
+    return std::holds_alternative<std::monostate>(value);
 }
 
 InterpretResult VM::interpret(std::shared_ptr<Chunk> chunk) {

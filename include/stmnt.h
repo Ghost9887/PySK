@@ -26,4 +26,11 @@ public:
     std::string to_string() override;
 };
 
+class DeclStmnt : public Stmnt {
+public:
+public:
+    DeclStmnt(std::shared_ptr<Expr> expr);
+    std::string to_string() override;
+};
+
 #endif

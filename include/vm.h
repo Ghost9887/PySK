@@ -28,6 +28,10 @@ private:
     LiteralValue binary_op(char op);
     LiteralValue compare_op(std::string op);
     LiteralValue negate(LiteralValue value);
+    bool is_number(LiteralValue value);
+    bool is_bool(LiteralValue value);
+    bool is_string(LiteralValue value);
+    bool is_null(LiteralValue value);
 private:
     std::vector<LiteralValue> stack;
     int ip;

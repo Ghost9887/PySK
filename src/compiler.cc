@@ -59,6 +59,7 @@ void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
     evaluate_expression(expr->right);
     switch (expr->op.type) {
         case T_MINUS: emit_byte(OP_NEGATE, get_line(expr->op)); break;
+        case T_BANG: emit_byte(OP_NEGATE, get_line(expr->op)); break;
         default: break;
     }
 }
