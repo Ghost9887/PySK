@@ -23,12 +23,13 @@ public:
 private:
     InterpretResult run();
     Byte read_byte();
-    Value read_constant();
-    Value pop(); 
-    Value binary_op(char op);
-    Value compare_op(std::string op);
+    LiteralValue read_constant();
+    LiteralValue pop(); 
+    LiteralValue binary_op(char op);
+    LiteralValue compare_op(std::string op);
+    LiteralValue negate(LiteralValue value);
 private:
-    std::vector<Value> stack;
+    std::vector<LiteralValue> stack;
     int ip;
 };
 

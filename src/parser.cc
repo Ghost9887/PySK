@@ -14,7 +14,15 @@ std::vector<std::shared_ptr<Stmnt>> Parser::parse() {
 
 std::shared_ptr<Stmnt> Parser::statement() {
     if (match(T_VYTLAC)) return print_stmnt();
+    else if (match(T_LET)) return declaration_stmnt();
     return std::make_shared<ExpressionStmnt>(expression());
+}
+
+std::shared_ptr<Stmnt> Parser::declaration_stmnt() {
+    std::string ident = tokens.at(ip).lexeme;
+    consume(T_EQUAL, "Ocakavany '='.");
+    std::shared_ptr<Expr> expr = expression();
+    return nullptr;
 }
 
 std::shared_ptr<Stmnt> Parser::print_stmnt() {
@@ -25,8 +33,7 @@ std::shared_ptr<Stmnt> Parser::print_stmnt() {
 }
 
 std::shared_ptr<Expr> Parser::expression() {
-    std::shared_ptr<Expr> expr = binary();
-    return expr;
+    return binary();
 }
 
 std::shared_ptr<Expr> Parser::binary() {
@@ -93,7 +100,7 @@ std::shared_ptr<Expr> Parser::unary() {
 
 std::shared_ptr<Expr> Parser::primary() {
     if (match(T_NUMBER)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
-
+    else if (match(T_PRAVDA) || match(T_NEPRAVDA)) return std::make_shared<LiteralExpr>(tokens.at(ip - 1).literal);
     if (match(T_LPAREN)) {
         std::shared_ptr<Expr> expr = binary();
         consume(T_RPAREN, "Ocakavany ')'.");

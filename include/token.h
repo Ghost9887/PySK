@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
-#include <variant>
+
 #include "values.h"
 
 typedef enum {
@@ -77,8 +77,6 @@ inline static const std::unordered_map<std::string, TokenType> keywords_map = {
     {"pravda", T_PRAVDA},
     {"nepravda", T_NEPRAVDA},
 };
-
-using LiteralValue = std::variant<std::monostate, Value, std::string, bool>;
 
 class Token {
 public:

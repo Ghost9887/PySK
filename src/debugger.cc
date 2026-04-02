@@ -17,8 +17,8 @@ int Debugger::print_simple_instruction(const std::string name, int offset) {
 
 int Debugger::print_constant_instruction(const std::string name, std::shared_ptr<Chunk> chunk, int offset) {
     std::cout << "  " << name;
-    Value value = chunk->constants->values.at(chunk->codes.at(offset + 1));
-    std::cout << "  " << "'" << std::to_string(value) << "'" << '\n';
+    LiteralValue value = chunk->constants->values.at(chunk->codes.at(offset + 1)).literal;
+    std::cout << "  " << "'" << Debugger::literal_to_string(value) << "'" << '\n';
     return offset + 2;
 }
 
@@ -72,8 +72,24 @@ void Debugger::print_ast(std::vector<std::shared_ptr<Stmnt>> statements) {
     std::cout << '\n';
 }
 
-void Debugger::print_stack(std::vector<Value> &stack) {
-    for (Value v : stack) {
-        std::cout << "----" << v << "----" << '\n';
+void Debugger::print_stack(std::vector<LiteralValue> &stack) {
+    for (LiteralValue v : stack) {
+        std::cout << "----" << Debugger::literal_to_string(v) << "----" << '\n';
     }
+}
+
+std::string Debugger::literal_to_string(LiteralValue literal) {
+    return std::visit([](auto &&arg) -> std::string {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_same_v<T, std::string>) {
+            return arg;
+        } else if constexpr (std::is_arithmetic_v<T>) {
+            return std::to_string(arg);
+        } else if constexpr (std::is_same_v<T, bool>) {
+            return arg ? "pravda" : "nepravda";
+        } else {
+            return "nic";
+        }
+    }, literal);
 }

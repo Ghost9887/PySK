@@ -1,6 +1,9 @@
 #include "values.h"
 
-int Values::write_value(Value value) {
-    values.push_back(value);
+Value::Value(LiteralValue literal) :
+    literal(literal) {}
+
+int Values::write_value(LiteralValue literal) {
+    values.emplace_back(Value(literal));
     return values.size() - 1;
 }

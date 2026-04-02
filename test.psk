@@ -1,1 +1,2 @@
-vytlac(5 + 5 * 4);
+vytlac(pravda == pravda);
+vytlac(5 * 5 == 5 * 5);

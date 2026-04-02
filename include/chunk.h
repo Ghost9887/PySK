@@ -31,7 +31,7 @@ public:
     Chunk();
     ~Chunk() = default;
     void write_chunk(Byte byte, int line);
-    void write_constant(Value value, int line);
+    void write_constant(LiteralValue value, int line);
 public:
     std::vector<Byte> codes;
     std::vector<int> lines;

@@ -18,7 +18,7 @@ void Chunk::write_chunk(Byte byte, int line) {
     }
 }
 
-void Chunk::write_constant(Value value, int line) {
+void Chunk::write_constant(LiteralValue value, int line) {
     int index = constants->write_value(value);
     if (index <= 256) {
         write_chunk(OP_CONSTANT, line);

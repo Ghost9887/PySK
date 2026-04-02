@@ -64,16 +64,11 @@ void Compiler::evaluate_unary_expression(std::shared_ptr<UnaryExpr> expr) {
 }
 
 void Compiler::evaluate_literal_expression(std::shared_ptr<LiteralExpr> expr) {
-    //TODO: add line to literal expr
-    if (is_value(expr->literal)) emit_value(std::get<Value>(expr->literal), 0);
+    emit_value(expr->literal, 0);
 }
 
 void Compiler::evaluate_grouping_expression(std::shared_ptr<GroupingExpr> expr) {
     evaluate_expression(expr->expression);
-}
-
-bool Compiler::is_value(LiteralValue literal) {
-    return std::holds_alternative<Value>(literal);
 }
 
 int Compiler::get_line(Token &token) {
@@ -84,6 +79,6 @@ void Compiler::emit_byte(Byte byte, int line) {
     chunk->write_chunk(byte, line);
 }
 
-void Compiler::emit_value(Value value, int line) {
+void Compiler::emit_value(LiteralValue value, int line) {
     chunk->write_constant(value, line);
 }
