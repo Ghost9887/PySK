@@ -34,12 +34,20 @@ void Compiler::evaluate_if_stmnt(std::shared_ptr<IfStmnt> stmnt) {
     emit_byte(OP_IF, stmnt->line);
     emit_byte(OP_JUMP, stmnt->line);
 
+    //if statement
     int org_size = chunk->codes.size();
     evaluate(stmnt->body);
     int new_size = chunk->codes.size() - org_size;
     emit_jump(new_size);
 
-    //TODO: else statement
+    //else statement
+    if (stmnt->else_body.has_value()) {
+        emit_byte(OP_INAK, stmnt->line);
+        emit_byte(OP_JUMP, stmnt->line);
+        int org_size = chunk->codes.size();
+        evaluate(stmnt->else_body.value());
+        int new_size = chunk->codes.size() - org_size;
+    }
 }
 
 void Compiler::evaluate_print_stmnt(std::shared_ptr<PrintStmnt> stmnt) {

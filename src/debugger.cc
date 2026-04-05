@@ -53,6 +53,7 @@ int Debugger::print_instruction(std::shared_ptr<Chunk> chunk, int offset) {
         case OP_DEFINE_GLOBAL: return Debugger::print_simple_instruction("OP_DEFINE_GLOBAL", offset);
         case OP_GET_GLOBAL: return Debugger::print_simple_instruction("OP_GET_GLOBAL", offset);
         case OP_IF: return Debugger::print_simple_instruction("OP_IF", offset);
+        case OP_INAK: return Debugger::print_simple_instruction("OP_INAK", offset);
         case OP_JUMP: return Debugger::print_jump_instruction("OP_JUMP", chunk, offset);
         case OP_RETURN: return Debugger::print_simple_instruction("OP_RETURN", offset);
         case OP_END: return Debugger::print_simple_instruction("OP_END", offset);

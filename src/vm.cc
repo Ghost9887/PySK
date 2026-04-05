@@ -43,7 +43,6 @@ void VM::jump() {
     }else error("Chyba v skoku.");
 }
 
-
 void VM::if_stmnt() {
     LiteralValue expr = pop();
     if (is_bool(expr)) {

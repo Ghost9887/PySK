@@ -1,5 +1,5 @@
-let a = 6;
-let b = 10;
+let b=30;
+let a=7;
 
-ak (a + b > 15) vytlac("True")
-inak vytlac("False");
+ak (a < b) vytlac ("pravda")
+inak vytlac("nepravda");

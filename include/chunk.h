@@ -25,6 +25,7 @@ typedef enum {
     OP_DEFINE_GLOBAL,
     OP_GET_GLOBAL,
     OP_IF,
+    OP_INAK,
     OP_JUMP,
     OP_RETURN,
     OP_END,
